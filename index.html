@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Veille — Réduction des risques</title>
+<meta name="description" content="Application de réduction des risques : suivi du temps entre les prises, alertes d'interactions, informations et contacts d'urgence.">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="disclaimer">
+    Outil de réduction des risques — n'incite pas à la consommation.
+    En cas d'urgence : <strong>15</strong> (SAMU) ou <strong>112</strong>.
+  </div>
+</header>
+
+<main>
+
+  <section id="tab-accueil" class="tab-panel active">
+    <div class="hero">
+      <p class="hero-eyebrow" id="hero-greeting">Bonjour</p>
+      <h1 class="hero-title">Accueil</h1>
+      <p class="hero-subtitle">Reste maître de ta soirée, en toute sécurité.</p>
+    </div>
+    <button id="btn-new-entry" class="primary-btn btn-cta">
+      <span class="btn-plus">+</span>
+      <span class="btn-cta-label">Enregistrer une conso</span>
+    </button>
+    <h2 class="section-title">Depuis les dernières prises</h2>
+    <div id="active-timers"></div>
+  </section>
+
+  <section id="tab-journal" class="tab-panel">
+    <div class="hero hero-compact">
+      <p class="hero-eyebrow hero-eyebrow-journal">Ton historique</p>
+      <h1 class="hero-title">Journal</h1>
+      <p class="hero-subtitle hero-subtitle-journal">Privé, stocké uniquement sur cet appareil.</p>
+    </div>
+    <div id="journal-list"></div>
+  </section>
+
+  <section id="tab-infos" class="tab-panel">
+    <div class="hero hero-compact">
+      <p class="hero-eyebrow hero-eyebrow-infos">Savoir & prévention</p>
+      <h1 class="hero-title">Infos par substance</h1>
+      <p class="hero-subtitle hero-subtitle-infos">À titre indicatif — ne remplace pas un avis médical.</p>
+    </div>
+    <img class="infos-banner" src="assets/illustrations/prevention.jpg" alt="Prévention et réduction des risques" loading="lazy">
+    <div id="infos-list"></div>
+  </section>
+
+  <section id="tab-urgence" class="tab-panel">
+    <div class="hero hero-compact">
+      <p class="hero-eyebrow hero-eyebrow-urgence">On est là pour toi</p>
+      <h1 class="hero-title">Urgence</h1>
+      <p class="hero-subtitle hero-subtitle-urgence">N'hésite jamais à demander de l'aide.</p>
+    </div>
+
+    <div class="emergency-numbers">
+      <a class="emergency-btn" href="tel:15">📞 SAMU — 15</a>
+      <a class="emergency-btn" href="tel:112">📞 Urgences UE — 112</a>
+      <a class="emergency-btn secondary" href="tel:0800230013">📞 Drogues Info Service</a>
+    </div>
+
+    <div class="danger-signs">
+      <h2 class="section-title">Appelez sans attendre si :</h2>
+      <ul>
+        <li>Perte de connaissance ou impossibilité de réveiller la personne</li>
+        <li>Respiration lente, irrégulière ou absente</li>
+        <li>Convulsions</li>
+        <li>Température corporelle très élevée, peau brûlante</li>
+        <li>Douleur thoracique ou forte gêne respiratoire</li>
+      </ul>
+      <p class="small">En attendant les secours : mettre en <strong>Position Latérale de Sécurité</strong> si la personne respire mais ne réagit pas. Ne jamais la laisser seule.</p>
+    </div>
+
+    <h2 class="section-title">Mes contacts de confiance</h2>
+    <div id="contacts-list"></div>
+    <form id="form-new-contact" class="inline-form">
+      <input type="text" id="input-contact-name" placeholder="Nom" required>
+      <input type="tel" id="input-contact-phone" placeholder="Téléphone" required>
+      <button type="submit" class="secondary-btn">Ajouter</button>
+    </form>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <button class="nav-btn nav-accueil active" data-tab="accueil">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg>
+    <span>Accueil</span>
+  </button>
+  <button class="nav-btn nav-journal" data-tab="journal">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3.5h6a1 1 0 0 1 1 1V6H8V4.5a1 1 0 0 1 1-1z"/><path d="M8.5 10.5h7M8.5 14h7M8.5 17.5h4"/></svg>
+    <span>Journal</span>
+  </button>
+  <button class="nav-btn nav-infos" data-tab="infos">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5" stroke-width="2.2"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>
+    <span>Infos</span>
+  </button>
+  <button class="nav-btn nav-urgence" data-tab="urgence">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 8.5c0-3-2.2-5-5-5-1.7 0-3 .8-3.8 2A4.6 4.6 0 0 0 7 3.5c-2.8 0-5 2-5 5 0 5.5 8.3 10 9 10.5.6-.4 5.4-3.2 7.6-7.2"/><path d="M14.5 12h2l1.2-2 1.6 4 1.2-2H22"/></svg>
+    <span>Urgence</span>
+  </button>
+</nav>
+
+<!-- Modal : nouvelle prise -->
+<div id="modal-new-entry" class="modal">
+  <div class="modal-content">
+    <h2>Nouvelle prise</h2>
+    <form id="form-new-entry">
+      <label>Substance</label>
+      <div id="substance-picker" class="substance-grid"></div>
+      <p id="substance-picker-error" class="picker-error" hidden>Choisissez une substance ci-dessus.</p>
+
+      <div id="quantity-section" class="picker-section" hidden>
+        <label>Quantité</label>
+        <div id="quantity-picker" class="chip-grid"></div>
+      </div>
+
+      <div class="picker-section">
+        <label>Moment de la prise</label>
+        <div id="time-picker" class="chip-grid"></div>
+        <button type="button" id="btn-toggle-time" class="link-btn">Choisir une heure précise</button>
+        <input type="datetime-local" id="input-datetime" class="hidden-field" hidden>
+      </div>
+
+      <div class="picker-section">
+        <button type="button" id="btn-toggle-note" class="link-btn">+ Ajouter une note (optionnel)</button>
+        <input type="text" id="input-note" class="hidden-field" placeholder="ex. avec repas, contexte..." hidden>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-cancel-entry" class="secondary-btn">Annuler</button>
+        <button type="submit" class="primary-btn">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal : avertissement interaction -->
+<div id="modal-warning" class="modal">
+  <div class="modal-content">
+    <h2>⚠️ Avertissement</h2>
+    <p class="small">D'après votre journal des dernières 24h :</p>
+    <div id="warning-body"></div>
+    <div class="modal-actions">
+      <button type="button" id="btn-warning-back" class="secondary-btn">Revenir en arrière</button>
+      <button type="button" id="btn-warning-continue" class="primary-btn danger">Enregistrer quand même</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

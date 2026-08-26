@@ -1,0 +1,12 @@
+{
+  "name": "Veille — Réduction des risques",
+  "short_name": "Veille",
+  "description": "Suivi du temps entre les prises, alertes d'interactions et infos de réduction des risques.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
