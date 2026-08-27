@@ -222,15 +222,13 @@ function addContact(name, phone) {
 
 let selectedSubstanceId = null;
 let selectedQuantity = '';
-let selectedTimeOffsetMin = 0; // null quand une heure précise est choisie via le champ natif
-let useCustomTime = false;
+let selectedTimeOffsetMin = 0;
 
 function openNewEntryModal() {
   const modal = document.getElementById('modal-new-entry');
   selectedSubstanceId = null;
   selectedQuantity = '';
   selectedTimeOffsetMin = 0;
-  useCustomTime = false;
 
   const picker = document.getElementById('substance-picker');
   picker.innerHTML = SUBSTANCES.map(s => {
@@ -253,9 +251,6 @@ function openNewEntryModal() {
   document.getElementById('quantity-picker').innerHTML = '';
 
   renderTimePicker();
-  document.getElementById('input-datetime').hidden = true;
-  document.getElementById('input-datetime').value = toLocalInputValue(new Date());
-  document.getElementById('btn-toggle-time').textContent = 'Choisir une heure précise';
 
   document.getElementById('input-note').hidden = true;
   document.getElementById('input-note').value = '';
@@ -300,9 +295,6 @@ function renderTimePicker() {
   container.querySelectorAll('.chip').forEach((chip, idx) => {
     if (idx === 0) chip.classList.add('selected');
     chip.addEventListener('click', () => {
-      useCustomTime = false;
-      document.getElementById('input-datetime').hidden = true;
-      document.getElementById('btn-toggle-time').textContent = 'Choisir une heure précise';
       selectedTimeOffsetMin = Number(chip.dataset.offset);
       container.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
       chip.classList.add('selected');
@@ -314,12 +306,6 @@ function closeModal(modal) {
   modal.classList.remove('open');
 }
 
-function toLocalInputValue(date) {
-  const pad = n => String(n).padStart(2, '0');
-  return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) +
-    'T' + pad(date.getHours()) + ':' + pad(date.getMinutes());
-}
-
 function handleNewEntrySubmit(evt) {
   evt.preventDefault();
   if (!selectedSubstanceId) {
@@ -329,9 +315,7 @@ function handleNewEntrySubmit(evt) {
   const substanceId = selectedSubstanceId;
   const quantity = selectedQuantity;
   const note = document.getElementById('input-note').hidden ? '' : document.getElementById('input-note').value.trim();
-  const timestamp = useCustomTime
-    ? new Date(document.getElementById('input-datetime').value).getTime()
-    : Date.now() - selectedTimeOffsetMin * 60000;
+  const timestamp = Date.now() - selectedTimeOffsetMin * 60000;
 
   const entry = { id: crypto.randomUUID(), substanceId, quantity, note, timestamp };
 
@@ -440,19 +424,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('btn-warning-continue').addEventListener('click', () => {
     if (state.pendingEntry) commitEntry(state.pendingEntry);
-  });
-
-  document.getElementById('btn-toggle-time').addEventListener('click', () => {
-    const dt = document.getElementById('input-datetime');
-    dt.hidden = !dt.hidden;
-    document.getElementById('btn-toggle-time').textContent = dt.hidden ? 'Choisir une heure précise' : 'Utiliser les choix rapides';
-    if (!dt.hidden) {
-      useCustomTime = true;
-      document.getElementById('time-picker').querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-    } else {
-      const firstChip = document.getElementById('time-picker').querySelector('.chip');
-      if (firstChip) firstChip.click();
-    }
   });
 
   document.getElementById('btn-toggle-note').addEventListener('click', () => {
