@@ -150,6 +150,33 @@ function renderDoseProgress(total) {
     '</div>';
 }
 
+// Intensifie la couleur d'une substance vers le rouge à mesure que le cumul de
+// doses augmente, jusqu'à un seuil "critique" au-delà duquel elle n'évolue plus.
+// 2 doses complètes cumulées sur 24h est un choix indicatif de repère de prudence
+// (à ajuster si besoin) : au-delà, la couleur reste au maximum d'intensité.
+const CRITICAL_DOSE_TOTAL = 2;
+
+function hexToRgb(hex) {
+  hex = hex.replace('#', '');
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+  const num = parseInt(hex, 16);
+  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+
+function mixColors(hexA, hexB, t) {
+  const a = hexToRgb(hexA), b = hexToRgb(hexB);
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const bl = Math.round(a.b + (b.b - a.b) * t);
+  return 'rgb(' + r + ',' + g + ',' + bl + ')';
+}
+
+function escalatedColor(baseColor, doseTotal) {
+  if (!doseTotal) return baseColor;
+  const t = Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1);
+  return mixColors(baseColor, '#ef4444', t);
+}
+
 let expandedTimerNotes = new Set();
 
 function renderHome() {
@@ -175,13 +202,14 @@ function renderHome() {
     }
     const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
     const isExpanded = expandedTimerNotes.has(e.substanceId);
-    return '<div class="timer-card" style="--sub-color:' + sub.color + '">' +
+    const cardColor = escalatedColor(sub.color, doseTotal);
+    return '<div class="timer-card" style="--sub-color:' + cardColor + '">' +
       '<div class="timer-card-head">' +
       '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '">' +
       substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong>' +
       '<svg class="timer-toggle-chevron' + (isExpanded ? ' open' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
       '</button>' +
-      '<span class="badge ' + statusClass + '">' + (statusClass === 'ok' ? 'OK' : 'Attente') + '</span></div>' +
+      '</div>' +
       '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
       '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
       (doseTotal !== null ? renderDoseProgress(doseTotal) : '') +
