@@ -138,15 +138,22 @@ function accumulatedDoseFraction(substanceId, withinHours) {
   return hasParsed ? total : null;
 }
 
-function renderDoseProgress(total) {
-  const pills = [];
+function renderDoseProgress(sub, total) {
+  const units = [];
   let remaining = total;
-  while (remaining > 0.001 && pills.length < 6) {
-    pills.push(Math.min(remaining, 1));
+  while (remaining > 0.001 && units.length < 6) {
+    units.push(Math.min(remaining, 1));
     remaining -= 1;
   }
+  const iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + sub.icon + '</svg>';
   return '<div class="dose-progress">' +
-    pills.map(f => '<span class="dose-pill"><span class="dose-pill-fill" style="width:' + Math.round(f * 100) + '%"></span></span>').join('') +
+    units.map(f => {
+      const clipTop = Math.round((1 - f) * 100);
+      return '<span class="dose-icon" style="color:' + sub.color + '">' +
+        '<span class="dose-icon-base">' + iconSvg + '</span>' +
+        '<span class="dose-icon-fill" style="clip-path: inset(' + clipTop + '% 0 0 0)">' + iconSvg + '</span>' +
+        '</span>';
+    }).join('') +
     '<span class="dose-progress-label">Cumul : ' + formatFraction(total) + '</span>' +
     '</div>';
 }
@@ -221,7 +228,7 @@ function renderHome() {
       '</div>' +
       '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
       '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
-      (doseTotal !== null ? renderDoseProgress(doseTotal) : '') +
+      (doseTotal !== null ? renderDoseProgress(sub, doseTotal) : '') +
       (isExpanded ? '<div class="timer-note">' + sub.conseilRedose + '</div>' : '') +
       '</div>';
   }).join('');
