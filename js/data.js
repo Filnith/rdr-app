@@ -27,7 +27,7 @@ const SUBSTANCES = [
     illustration: 'mdma.jpg',
     dureeEffets: '3 à 6h (montée 30-60 min)',
     minIntervalMin: 240,
-    conseilRedose: 'Une reprise ("booster") est déconseillée. Si elle a lieu : jamais avant 2h, dose ≤ à la moitié de la première prise, une seule fois maximum. Pas plus d\'une prise complète tous les 4-6 mois pour limiter la neurotoxicité.',
+    conseilRedose: 'Une reprise ("booster") est déconseillée. Si elle a lieu : jamais avant 2h, dose ≤ à la moitié de la première prise, une seule fois maximum.',
     effets: 'Empathie, euphorie, hausse de l\'énergie et de la température corporelle, mâchoires serrées.',
     signesDanger: 'Hyperthermie (peau brûlante, ne transpire plus), confusion, convulsions, hyponatrémie (trop d\'eau bue sans sel).',
     conduite: 'Faire des pauses au calme et au frais, boire environ un verre d\'eau par heure (pas plus), éviter l\'alcool. En cas d\'hyperthermie ou de convulsions : appeler immédiatement le 15.'

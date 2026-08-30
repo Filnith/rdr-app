@@ -351,7 +351,21 @@ main {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
 }
+.timer-toggle-chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+.timer-toggle-chevron.open { transform: rotate(180deg); }
 .badge {
   font-size: 0.72rem;
   padding: 0.15rem 0.5rem;

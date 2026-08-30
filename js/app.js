@@ -150,6 +150,8 @@ function renderDoseProgress(total) {
     '</div>';
 }
 
+let expandedTimerNotes = new Set();
+
 function renderHome() {
   const container = document.getElementById('active-timers');
   const heading = document.getElementById('active-timers-heading');
@@ -172,16 +174,29 @@ function renderHome() {
       statusText = 'Encore ' + formatElapsed(remainingMs) + ' avant le délai minimum conseillé';
     }
     const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
+    const isExpanded = expandedTimerNotes.has(e.substanceId);
     return '<div class="timer-card" style="--sub-color:' + sub.color + '">' +
       '<div class="timer-card-head">' +
-      '<div class="timer-card-title">' + substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong></div>' +
+      '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '">' +
+      substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong>' +
+      '<svg class="timer-toggle-chevron' + (isExpanded ? ' open' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
+      '</button>' +
       '<span class="badge ' + statusClass + '">' + (statusClass === 'ok' ? 'OK' : 'Attente') + '</span></div>' +
       '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
       '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
       (doseTotal !== null ? renderDoseProgress(doseTotal) : '') +
-      '<div class="timer-note">' + sub.conseilRedose + '</div>' +
+      (isExpanded ? '<div class="timer-note">' + sub.conseilRedose + '</div>' : '') +
       '</div>';
   }).join('');
+
+  container.querySelectorAll('.timer-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.substanceId;
+      if (expandedTimerNotes.has(id)) expandedTimerNotes.delete(id);
+      else expandedTimerNotes.add(id);
+      renderHome();
+    });
+  });
 }
 
 // ---------- Journal ----------
