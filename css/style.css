@@ -402,8 +402,10 @@ main {
 .timer-status.ok { color: var(--ok); }
 .timer-status.wait { color: var(--wait); }
 .timer-note {
-  font-size: 0.8rem;
-  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #c4b5fd;
   margin-top: 0.5rem;
   border-top: 1px solid var(--border);
   padding-top: 0.5rem;
