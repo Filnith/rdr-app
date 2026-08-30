@@ -202,8 +202,10 @@ function renderHome() {
     }
     const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
     const isExpanded = expandedTimerNotes.has(e.substanceId);
+    const intensity = doseTotal ? Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1) : 0;
     const cardColor = escalatedColor(sub.color, doseTotal);
-    return '<div class="timer-card" style="--sub-color:' + cardColor + '">' +
+    const cardTintPct = Math.round(7 + intensity * 15);
+    return '<div class="timer-card" style="--sub-color:' + cardColor + '; --card-tint:' + cardTintPct + '%">' +
       '<div class="timer-card-head">' +
       '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '">' +
       substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong>' +

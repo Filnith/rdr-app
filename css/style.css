@@ -349,12 +349,13 @@ main {
 }
 
 .timer-card {
-  background: var(--card);
+  background: color-mix(in srgb, var(--sub-color, var(--card)) var(--card-tint, 7%), var(--card));
   border: 1px solid var(--border);
   border-left: 4px solid var(--sub-color, var(--border));
   border-radius: 12px;
   padding: 0.9rem;
   margin-bottom: 0.8rem;
+  transition: background 0.5s ease;
 }
 .timer-card-head {
   display: flex;
