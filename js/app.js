@@ -97,15 +97,16 @@ function lastEntryPerSubstance(withinHours) {
   return Array.from(seen.values());
 }
 
-// Convertit une quantité de type "1/4", "1/2 comprimé", "2 entiers" en nombre.
-// Renvoie null si la quantité n'est pas exprimée sous cette forme (ex. "1 trait", "~0,5 g").
+// Convertit une quantité chiffrée ("1/4", "2 verres", "~0,5 g", "1 trait", "2 rails"...)
+// en nombre, pour permettre le cumul quelle que soit l'unité de la substance.
+// Renvoie null si la quantité n'est pas chiffrée (ex. "petite dose", "quelques bouffées").
 function parseQuantityFraction(label) {
   if (!label) return null;
-  const s = label.trim().toLowerCase();
-  let m = s.match(/^(\d+)\/(\d+)/);
+  const s = label.trim().toLowerCase().replace('~', '').replace(',', '.').replace('+', '');
+  let m = s.match(/^(\d+)\s*\/\s*(\d+)/);
   if (m) return parseInt(m[1], 10) / parseInt(m[2], 10);
-  m = s.match(/^(\d+)\s*(entiers?|comprimés?)?$/);
-  if (m) return parseInt(m[1], 10);
+  m = s.match(/^(\d+(?:\.\d+)?)/);
+  if (m) return parseFloat(m[1]);
   return null;
 }
 
@@ -152,15 +153,14 @@ function renderDoseProgress(total) {
 
 // Intensifie la couleur d'une substance vers le rouge à mesure que le cumul de
 // doses augmente, jusqu'à un seuil "critique" au-delà duquel elle n'évolue plus.
-// 1,5 dose complète cumulée sur 24h est un choix indicatif de repère de prudence
-// (à ajuster si besoin) : au-delà, la couleur reste au maximum d'intensité.
+// Ce seuil est propre à chaque substance (sub.criticalDoseTotal, dans data.js) car
+// une "unité" n'a pas le même poids selon l'unité (verre, trait, ml, comprimé...) :
+// des repères de prudence indicatifs, pas des seuils médicaux précis.
 // La progression est accélérée (racine) pour que le changement soit très visible
 // dès la 2e prise, plutôt que de rester subtil jusqu'au seuil.
-const CRITICAL_DOSE_TOTAL = 1.5;
-
-function doseIntensity(doseTotal) {
+function doseIntensity(doseTotal, criticalTotal) {
   if (!doseTotal) return 0;
-  const t = Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1);
+  const t = Math.min(doseTotal / (criticalTotal || 1.5), 1);
   return Math.pow(t, 0.55);
 }
 
@@ -179,9 +179,9 @@ function mixColors(hexA, hexB, t) {
   return 'rgb(' + r + ',' + g + ',' + bl + ')';
 }
 
-function escalatedColor(baseColor, doseTotal) {
+function escalatedColor(baseColor, doseTotal, criticalTotal) {
   if (!doseTotal) return baseColor;
-  return mixColors(baseColor, '#ef4444', doseIntensity(doseTotal));
+  return mixColors(baseColor, '#ef4444', doseIntensity(doseTotal, criticalTotal));
 }
 
 let expandedTimerNotes = new Set();
@@ -209,8 +209,8 @@ function renderHome() {
     }
     const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
     const isExpanded = expandedTimerNotes.has(e.substanceId);
-    const intensity = doseIntensity(doseTotal);
-    const cardColor = escalatedColor(sub.color, doseTotal);
+    const intensity = doseIntensity(doseTotal, sub.criticalDoseTotal);
+    const cardColor = escalatedColor(sub.color, doseTotal, sub.criticalDoseTotal);
     const cardTintPct = Math.round(16 + intensity * 46);
     return '<div class="timer-card" style="--sub-color:' + cardColor + '; --card-tint:' + cardTintPct + '%">' +
       '<div class="timer-card-head">' +
