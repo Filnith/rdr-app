@@ -23,7 +23,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
-  padding-bottom: 72px;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
 }
 
 h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display); font-weight: 600; }
@@ -64,6 +64,96 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
 .hero-compact { padding: 0.3rem 0 0.9rem; }
 .hero-compact .hero-title { font-size: 1.8rem; }
 .hero-compact .hero-subtitle { font-size: 0.88rem; }
+
+.hero-accueil { padding: 1rem 0 0.8rem; }
+.hero-accueil .hero-subtitle { font-size: 1.05rem; font-weight: 600; }
+
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0f172a, #1e1b4b, #4c1d4f, #1e1b4b, #0f172a);
+  background-size: 300% 300%;
+  animation: splashGradient 10s ease infinite;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+@keyframes splashGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+#splash-screen.splash-exit {
+  opacity: 0;
+  transform: scale(1.15);
+  pointer-events: none;
+}
+#splash-screen .btn-splash {
+  width: auto;
+  padding: 1.4rem 2.4rem;
+  font-size: 1.15rem;
+}
+.btn-splash .btn-cta-label { font-size: 1.5rem; }
+
+.splash-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+.splash-logo {
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  filter: drop-shadow(0 0 26px rgba(167, 139, 250, 0.6));
+  animation: splashFloat 3.5s ease-in-out infinite;
+}
+@keyframes splashFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(4deg); }
+}
+.splash-wordmark {
+  font-family: var(--font-cta);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+.splash-tagline {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #c4b5fd;
+  margin: 0 0 1.2rem;
+  text-align: center;
+}
+
+.splash-spark {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: sparkTwinkle 3s ease-in-out infinite;
+  pointer-events: none;
+}
+.spark-1 { top: 18%; left: 22%; width: 10px; height: 10px; background: #38bdf8; animation-delay: 0s; }
+.spark-2 { top: 28%; right: 18%; width: 7px; height: 7px; background: #f472b6; animation-delay: 0.6s; }
+.spark-3 { bottom: 30%; left: 16%; width: 8px; height: 8px; background: #a78bfa; animation-delay: 1.2s; }
+.spark-4 { bottom: 22%; right: 24%; width: 12px; height: 12px; background: #4ade80; animation-delay: 1.8s; }
+.spark-5 { top: 48%; right: 10%; width: 6px; height: 6px; background: #facc15; animation-delay: 2.4s; }
+@keyframes sparkTwinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.3); }
+}
 
 .hero-eyebrow-journal { background: linear-gradient(90deg, #38bdf8, #22d3ee); -webkit-background-clip: text; background-clip: text; }
 .hero-eyebrow-infos { background: linear-gradient(90deg, #4ade80, #22d3ee); -webkit-background-clip: text; background-clip: text; }
@@ -432,10 +522,13 @@ main {
 .info-illustration {
   display: block;
   width: 100%;
-  max-height: 220px;
+  max-width: 260px;
+  max-height: 140px;
+  margin-left: auto;
+  margin-right: auto;
   object-fit: cover;
   border-radius: 10px;
-  margin: 0.2rem 0 0.8rem;
+  margin: 0.2rem auto 0.7rem;
 }
 
 .infos-banner {
@@ -565,6 +658,7 @@ main {
   border-radius: 16px 16px 0 0;
   padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
   max-height: 92vh;
+  max-height: 92dvh;
   overflow-y: auto;
 }
 .modal-content h2 {

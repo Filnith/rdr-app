@@ -76,23 +76,16 @@ function lastEntryPerSubstance(withinHours) {
   return Array.from(seen.values());
 }
 
-function updateGreeting() {
-  const hour = new Date().getHours();
-  let greeting = 'Bonne nuit';
-  if (hour >= 5 && hour < 12) greeting = 'Bonjour';
-  else if (hour >= 12 && hour < 18) greeting = 'Bon après-midi';
-  else if (hour >= 18 && hour < 23) greeting = 'Bonne soirée';
-  document.getElementById('hero-greeting').textContent = greeting;
-}
-
 function renderHome() {
-  updateGreeting();
   const container = document.getElementById('active-timers');
+  const heading = document.getElementById('active-timers-heading');
   const lasts = lastEntryPerSubstance(24);
   if (lasts.length === 0) {
-    container.innerHTML = '<p class="empty-state">Aucune prise enregistrée dans les dernières 24h.</p>';
+    heading.hidden = true;
+    container.innerHTML = '';
     return;
   }
+  heading.hidden = false;
   container.innerHTML = lasts.map(e => {
     const sub = getSubstance(e.substanceId);
     const elapsedMs = Date.now() - e.timestamp;
@@ -408,6 +401,10 @@ setInterval(() => {
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
   showTab('accueil');
+
+  document.getElementById('btn-splash-start').addEventListener('click', () => {
+    document.getElementById('splash-screen').classList.add('splash-exit');
+  });
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showTab(btn.dataset.tab));

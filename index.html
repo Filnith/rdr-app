@@ -16,6 +16,37 @@
 </head>
 <body>
 
+<div id="splash-screen">
+  <span class="splash-spark spark-1"></span>
+  <span class="splash-spark spark-2"></span>
+  <span class="splash-spark spark-3"></span>
+  <span class="splash-spark spark-4"></span>
+  <span class="splash-spark spark-5"></span>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <svg viewBox="0 0 120 120" width="110" height="110" fill="none">
+        <defs>
+          <linearGradient id="splashPillGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#38bdf8"/>
+            <stop offset="50%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#f472b6"/>
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-35 60 60)">
+          <rect x="18" y="40" width="84" height="40" rx="20" fill="url(#splashPillGrad)"/>
+          <line x1="60" y1="40" x2="60" y2="80" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <ellipse cx="35" cy="53" rx="11" ry="5.5" fill="rgba(255,255,255,0.5)"/>
+        </g>
+      </svg>
+    </div>
+    <p class="splash-wordmark">Veille</p>
+    <p class="splash-tagline">Ta soirée, en toute sécurité.</p>
+    <button id="btn-splash-start" class="primary-btn btn-cta btn-splash">
+      <span class="btn-cta-label">Démarre ta soirée</span>
+    </button>
+  </div>
+</div>
+
 <header class="app-header">
   <div class="disclaimer">
     Outil de réduction des risques — n'incite pas à la consommation.
@@ -26,16 +57,14 @@
 <main>
 
   <section id="tab-accueil" class="tab-panel active">
-    <div class="hero">
-      <p class="hero-eyebrow" id="hero-greeting">Bonjour</p>
-      <h1 class="hero-title">Accueil</h1>
+    <div class="hero hero-accueil">
       <p class="hero-subtitle">Reste maître de ta soirée, en toute sécurité.</p>
     </div>
     <button id="btn-new-entry" class="primary-btn btn-cta">
       <span class="btn-plus">+</span>
       <span class="btn-cta-label">Enregistrer une conso</span>
     </button>
-    <h2 class="section-title">Depuis les dernières prises</h2>
+    <h2 class="section-title" id="active-timers-heading" hidden>Depuis les dernières prises</h2>
     <div id="active-timers"></div>
   </section>
 
