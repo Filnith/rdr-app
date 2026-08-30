@@ -288,35 +288,62 @@ main {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 #btn-new-entry.btn-cta-image {
-  width: 236px;
-  height: 236px;
-  border-radius: 50%;
-  margin: 0.3rem auto 1.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  width: auto;
+  background: none;
+  box-shadow: none;
   padding: 0;
+  margin: 0.3rem auto 1.6rem;
   animation: none;
-  background-image: url('../assets/illustrations/mdma-visual.jpg');
+}
+#btn-new-entry.btn-cta-image:active .btn-cta-visual { transform: scale(0.96); }
+.btn-cta-visual {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  background-image: url('../assets/illustrations/mdma-pill.png');
   background-size: cover;
   background-position: center;
-  box-shadow: 0 14px 36px -10px rgba(129, 140, 248, 0.55);
+  box-shadow: 0 16px 38px -10px rgba(129, 140, 248, 0.6), 0 0 40px -6px rgba(244, 114, 182, 0.45);
+  transition: transform 0.15s ease;
+}
+.btn-cta-visual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: ctaShine 3.4s ease-in-out infinite;
+  pointer-events: none;
 }
 #btn-new-entry.btn-cta-image .btn-cta-label {
   display: inline-block;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   white-space: normal;
   text-align: center;
-  line-height: 1.3;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  padding: 0.5em 0.9em;
-  border-radius: 16px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  line-height: 1.25;
+  background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
 }
-#btn-new-entry.btn-cta-image.btn-success {
-  background-image: linear-gradient(135deg, rgba(74, 222, 128, 0.8), rgba(34, 197, 94, 0.8)), url('../assets/illustrations/mdma-visual.jpg');
+#btn-new-entry.btn-cta-image.btn-success .btn-cta-visual {
+  box-shadow: 0 16px 38px -10px rgba(34, 197, 94, 0.65), 0 0 40px -6px rgba(74, 222, 128, 0.5);
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-label {
-  background: rgba(15, 23, 42, 0.3);
+  background: linear-gradient(90deg, #4ade80, #22c55e);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 .btn-plus {
