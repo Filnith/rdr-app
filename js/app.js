@@ -152,9 +152,17 @@ function renderDoseProgress(total) {
 
 // Intensifie la couleur d'une substance vers le rouge à mesure que le cumul de
 // doses augmente, jusqu'à un seuil "critique" au-delà duquel elle n'évolue plus.
-// 2 doses complètes cumulées sur 24h est un choix indicatif de repère de prudence
+// 1,5 dose complète cumulée sur 24h est un choix indicatif de repère de prudence
 // (à ajuster si besoin) : au-delà, la couleur reste au maximum d'intensité.
-const CRITICAL_DOSE_TOTAL = 2;
+// La progression est accélérée (racine) pour que le changement soit très visible
+// dès la 2e prise, plutôt que de rester subtil jusqu'au seuil.
+const CRITICAL_DOSE_TOTAL = 1.5;
+
+function doseIntensity(doseTotal) {
+  if (!doseTotal) return 0;
+  const t = Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1);
+  return Math.pow(t, 0.55);
+}
 
 function hexToRgb(hex) {
   hex = hex.replace('#', '');
@@ -173,8 +181,7 @@ function mixColors(hexA, hexB, t) {
 
 function escalatedColor(baseColor, doseTotal) {
   if (!doseTotal) return baseColor;
-  const t = Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1);
-  return mixColors(baseColor, '#ef4444', t);
+  return mixColors(baseColor, '#ef4444', doseIntensity(doseTotal));
 }
 
 let expandedTimerNotes = new Set();
@@ -202,9 +209,9 @@ function renderHome() {
     }
     const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
     const isExpanded = expandedTimerNotes.has(e.substanceId);
-    const intensity = doseTotal ? Math.min(doseTotal / CRITICAL_DOSE_TOTAL, 1) : 0;
+    const intensity = doseIntensity(doseTotal);
     const cardColor = escalatedColor(sub.color, doseTotal);
-    const cardTintPct = Math.round(7 + intensity * 15);
+    const cardTintPct = Math.round(16 + intensity * 46);
     return '<div class="timer-card" style="--sub-color:' + cardColor + '; --card-tint:' + cardTintPct + '%">' +
       '<div class="timer-card-head">' +
       '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '">' +
