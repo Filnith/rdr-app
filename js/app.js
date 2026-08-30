@@ -11,6 +11,27 @@ const state = {
   pendingEntry: null // utilisé le temps de gérer un avertissement d'interaction
 };
 
+// crypto.randomUUID() exige un contexte sécurisé (HTTPS ou localhost) : il est
+// indisponible quand l'app est chargée via une IP locale en HTTP (ex. test sur
+// téléphone via le réseau Wi-Fi). On retombe alors sur crypto.getRandomValues,
+// qui lui n'a pas cette restriction.
+function generateId() {
+  if (window.crypto && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  const bytes = new Uint8Array(16);
+  if (window.crypto && crypto.getRandomValues) {
+    crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0'));
+  return hex.slice(0, 4).join('') + '-' + hex.slice(4, 6).join('') + '-' +
+    hex.slice(6, 8).join('') + '-' + hex.slice(8, 10).join('') + '-' + hex.slice(10, 16).join('');
+}
+
 function loadState() {
   try {
     state.entries = JSON.parse(localStorage.getItem(STORAGE_KEYS.entries)) || [];
@@ -76,6 +97,59 @@ function lastEntryPerSubstance(withinHours) {
   return Array.from(seen.values());
 }
 
+// Convertit une quantité de type "1/4", "1/2 comprimé", "2 entiers" en nombre.
+// Renvoie null si la quantité n'est pas exprimée sous cette forme (ex. "1 trait", "~0,5 g").
+function parseQuantityFraction(label) {
+  if (!label) return null;
+  const s = label.trim().toLowerCase();
+  let m = s.match(/^(\d+)\/(\d+)/);
+  if (m) return parseInt(m[1], 10) / parseInt(m[2], 10);
+  m = s.match(/^(\d+)\s*(entiers?|comprimés?)?$/);
+  if (m) return parseInt(m[1], 10);
+  return null;
+}
+
+function formatFraction(n) {
+  const whole = Math.floor(n + 1e-9);
+  const frac = n - whole;
+  let fracStr = '';
+  if (Math.abs(frac - 0.25) < 0.01) fracStr = '¼';
+  else if (Math.abs(frac - 0.5) < 0.01) fracStr = '½';
+  else if (Math.abs(frac - 0.75) < 0.01) fracStr = '¾';
+  if (whole === 0 && fracStr) return fracStr;
+  if (fracStr) return whole + ' ' + fracStr;
+  return String(whole);
+}
+
+// Cumul des quantités "en portions" (fractions/entiers de pilule) pour une substance
+// sur les dernières heures. Renvoie null si aucune quantité loggée n'est de ce type.
+function accumulatedDoseFraction(substanceId, withinHours) {
+  const entries = recentEntries(withinHours).filter(e => e.substanceId === substanceId);
+  let total = 0;
+  let hasParsed = false;
+  entries.forEach(e => {
+    const val = parseQuantityFraction(e.quantity);
+    if (val !== null) {
+      total += val;
+      hasParsed = true;
+    }
+  });
+  return hasParsed ? total : null;
+}
+
+function renderDoseProgress(total) {
+  const pills = [];
+  let remaining = total;
+  while (remaining > 0.001 && pills.length < 6) {
+    pills.push(Math.min(remaining, 1));
+    remaining -= 1;
+  }
+  return '<div class="dose-progress">' +
+    pills.map(f => '<span class="dose-pill"><span class="dose-pill-fill" style="width:' + Math.round(f * 100) + '%"></span></span>').join('') +
+    '<span class="dose-progress-label">Cumul : ' + formatFraction(total) + '</span>' +
+    '</div>';
+}
+
 function renderHome() {
   const container = document.getElementById('active-timers');
   const heading = document.getElementById('active-timers-heading');
@@ -97,12 +171,14 @@ function renderHome() {
       statusClass = 'wait';
       statusText = 'Encore ' + formatElapsed(remainingMs) + ' avant le délai minimum conseillé';
     }
+    const doseTotal = accumulatedDoseFraction(e.substanceId, 24);
     return '<div class="timer-card" style="--sub-color:' + sub.color + '">' +
       '<div class="timer-card-head">' +
       '<div class="timer-card-title">' + substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong></div>' +
       '<span class="badge ' + statusClass + '">' + (statusClass === 'ok' ? 'OK' : 'Attente') + '</span></div>' +
       '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
       '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
+      (doseTotal !== null ? renderDoseProgress(doseTotal) : '') +
       '<div class="timer-note">' + sub.conseilRedose + '</div>' +
       '</div>';
   }).join('');
@@ -206,7 +282,7 @@ function renderContacts() {
 }
 
 function addContact(name, phone) {
-  state.contacts.push({ id: crypto.randomUUID(), name, phone });
+  state.contacts.push({ id: generateId(), name, phone });
   saveContacts();
   renderContacts();
 }
@@ -310,7 +386,7 @@ function handleNewEntrySubmit(evt) {
   const note = document.getElementById('input-note').hidden ? '' : document.getElementById('input-note').value.trim();
   const timestamp = Date.now() - selectedTimeOffsetMin * 60000;
 
-  const entry = { id: crypto.randomUUID(), substanceId, quantity, note, timestamp };
+  const entry = { id: generateId(), substanceId, quantity, note, timestamp };
 
   const warnings = findInteractionWarnings(entry);
   if (warnings.length > 0) {

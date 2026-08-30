@@ -122,12 +122,19 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
 }
 .splash-wordmark {
   font-family: var(--font-cta);
-  font-size: 2.4rem;
+  font-size: 2.1rem;
   font-weight: 700;
   color: #fff;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
   margin: 0;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.wordmark-check {
+  background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .splash-tagline {
   font-family: var(--font-display);
@@ -371,6 +378,36 @@ main {
   margin-top: 0.5rem;
   border-top: 1px solid var(--border);
   padding-top: 0.5rem;
+}
+
+.dose-progress {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.55rem;
+}
+.dose-pill {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1.5px solid var(--sub-color, var(--border));
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+.dose-pill-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--sub-color, var(--accent)), color-mix(in srgb, var(--sub-color, var(--accent)) 55%, white));
+}
+.dose-progress-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-left: 0.2rem;
 }
 
 .journal-entry, .contact-row {

@@ -1,6 +1,6 @@
 {
-  "name": "Veille — Réduction des risques",
-  "short_name": "Veille",
+  "name": "Drug Check — Réduction des risques",
+  "short_name": "Drug Check",
   "description": "Suivi du temps entre les prises, alertes d'interactions et infos de réduction des risques.",
   "start_url": "./index.html",
   "display": "standalone",
