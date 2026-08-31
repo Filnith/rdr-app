@@ -249,12 +249,16 @@ function renderHome() {
   });
 }
 
+function currentSessionLabel() {
+  return 'Soirée du ' + new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 // Range toutes les prises actives (dernières 24h, non déjà archivées) dans le
 // journal sous une soirée nommée par la date du jour. Elles disparaissent de
 // l'accueil mais restent consultables intégralement dans le journal.
 function archiveCurrentSession() {
   const cutoff = Date.now() - 24 * 3600000;
-  const label = 'Soirée du ' + new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  const label = currentSessionLabel();
   let count = 0;
   state.entries.forEach(e => {
     if (!e.archived && e.timestamp >= cutoff) {
@@ -268,6 +272,16 @@ function archiveCurrentSession() {
     expandedTimerNotes.clear();
   }
   renderHome();
+}
+
+function confirmEndSession() {
+  closeModal(document.getElementById('modal-end-session'));
+  const container = document.getElementById('active-timers');
+  container.classList.add('archive-fade-out');
+  setTimeout(() => {
+    container.classList.remove('archive-fade-out');
+    archiveCurrentSession();
+  }, 450);
 }
 
 // ---------- Journal ----------
@@ -306,7 +320,8 @@ function renderJournal() {
   let html = current.map(renderJournalEntry).join('');
   sessions.forEach((entries, label) => {
     html += '<details class="journal-session" open>' +
-      '<summary>' + escapeHtml(label) + ' <span class="muted small">(' + entries.length + ')</span></summary>' +
+      '<summary><svg class="session-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' +
+      escapeHtml(label) + ' <span class="muted small">(' + entries.length + ')</span></summary>' +
       '<div class="journal-session-body">' + entries.map(renderJournalEntry).join('') + '</div>' +
       '</details>';
   });
@@ -603,7 +618,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btn-new-entry').addEventListener('click', openNewEntryModal);
-  document.getElementById('btn-end-session').addEventListener('click', archiveCurrentSession);
+  document.getElementById('btn-end-session').addEventListener('click', () => {
+    document.getElementById('end-session-label').textContent = '"' + currentSessionLabel() + '"';
+    document.getElementById('modal-end-session').classList.add('open');
+  });
+  document.getElementById('btn-end-session-cancel').addEventListener('click', () => {
+    closeModal(document.getElementById('modal-end-session'));
+  });
+  document.getElementById('btn-end-session-confirm').addEventListener('click', confirmEndSession);
   document.getElementById('form-new-entry').addEventListener('submit', handleNewEntrySubmit);
   document.getElementById('btn-cancel-entry').addEventListener('click', () => closeModal(document.getElementById('modal-new-entry')));
 
