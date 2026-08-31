@@ -289,15 +289,14 @@ main {
 }
 #btn-new-entry.btn-cta-image {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
+  justify-content: center;
   width: 100%;
   background: none;
   border: none;
   box-shadow: none;
   padding: 0;
-  margin: 0.3rem auto 1.6rem;
+  margin: 0.5rem auto 1.6rem;
   cursor: pointer;
 }
 #btn-new-entry.btn-cta-image:active .btn-cta-visual { transform: scale(0.96); }
@@ -305,12 +304,13 @@ main {
   position: relative;
   overflow: hidden;
   display: block;
-  width: 190px;
-  height: 190px;
+  width: 230px;
+  height: 230px;
   border-radius: 50%;
-  background-image: url('../assets/illustrations/mdma-pill.png');
+  background-image: url('../assets/illustrations/mdma-pill-labeled.png');
   background-size: cover;
   background-position: center;
+  box-shadow: 0 16px 40px -12px rgba(129, 140, 248, 0.5);
   transition: transform 0.15s ease;
 }
 .btn-cta-visual::after {
@@ -327,6 +327,7 @@ main {
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-visual {
   animation: pillBounce 0.55s ease;
+  box-shadow: 0 16px 40px -12px rgba(34, 197, 94, 0.55);
 }
 @keyframes pillBounce {
   0% { transform: scale(1) rotate(0deg); }
@@ -334,50 +335,6 @@ main {
   55% { transform: scale(0.94) rotate(4deg); }
   75% { transform: scale(1.05) rotate(-2deg); }
   100% { transform: scale(1) rotate(0deg); }
-}
-
-.btn-cta-textbar {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 280px;
-  padding: 0.9rem 1.2rem;
-  border-radius: 999px;
-  background: linear-gradient(120deg, #38bdf8, #818cf8, #f472b6, #38bdf8);
-  background-size: 300% 300%;
-  animation: ctaGradient 6s ease infinite;
-  box-shadow: 0 8px 22px -6px rgba(129, 140, 248, 0.5);
-}
-.btn-cta-textbar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 35%;
-  height: 100%;
-  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  transform: skewX(-20deg);
-  animation: ctaShine 3.4s ease-in-out infinite;
-  pointer-events: none;
-}
-#btn-new-entry.btn-cta-image .btn-cta-label {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-cta);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 1.15rem;
-  letter-spacing: 0.03em;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-}
-#btn-new-entry.btn-cta-image.btn-success .btn-cta-textbar {
-  background: linear-gradient(120deg, #4ade80, #22c55e);
-  animation: none;
-  box-shadow: 0 8px 22px -6px rgba(34, 197, 94, 0.5);
 }
 
 .btn-plus {

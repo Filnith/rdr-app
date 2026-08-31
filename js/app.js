@@ -571,8 +571,7 @@ function commitEntry(entry) {
 function triggerSaveAnimation() {
   const btn = document.getElementById('btn-new-entry');
   if (!btn) return;
-  const label = btn.querySelector('.btn-cta-label');
-  const originalText = label.textContent;
+  const originalLabel = btn.getAttribute('aria-label');
 
   const rect = btn.getBoundingClientRect();
   const ripple = document.createElement('div');
@@ -583,10 +582,10 @@ function triggerSaveAnimation() {
   ripple.addEventListener('animationend', () => ripple.remove());
 
   btn.classList.add('btn-success');
-  label.textContent = 'Conso enregistrée ✓';
+  btn.setAttribute('aria-label', 'Conso enregistrée');
   setTimeout(() => {
     btn.classList.remove('btn-success');
-    label.textContent = originalText;
+    btn.setAttribute('aria-label', originalLabel);
   }, 1400);
 }
 
