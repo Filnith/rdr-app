@@ -330,14 +330,17 @@ main {
   position: relative;
   z-index: 1;
   display: inline-block;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: none;
+  font-size: 1.2rem;
+  letter-spacing: 0.01em;
   white-space: normal;
   max-width: 150px;
   text-align: center;
-  line-height: 1.2;
-  color: #fff;
-  -webkit-text-stroke: 3px rgba(15, 23, 42, 0.85);
+  line-height: 1.15;
+  color: #312e81;
+  -webkit-text-stroke: 3px #fff;
   paint-order: stroke fill;
   text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 }
@@ -418,6 +421,28 @@ main {
   text-align: center;
   padding: 2rem 0;
 }
+
+.btn-archive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 1.3rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid #3b4a6b;
+  cursor: pointer;
+  background: linear-gradient(120deg, #1e1b4b, #253461, #1e3a5f);
+  color: #c7d2e8;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, background 0.3s ease;
+}
+.btn-archive svg { width: 18px; height: 18px; flex-shrink: 0; }
+.btn-archive:active { transform: scale(0.97); }
+.btn-archive[hidden] { display: none; }
 
 .timer-card {
   background: color-mix(in oklch, var(--sub-color, var(--card)) var(--card-tint, 16%), var(--card));
@@ -529,6 +554,23 @@ main {
 }
 .journal-entry { border-left: 4px solid var(--sub-color, var(--border)); }
 .journal-entry-body { flex: 1; }
+
+.journal-session {
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+.journal-session summary {
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.6rem;
+}
+.journal-session summary::-webkit-details-marker { display: none; }
 
 .avatar {
   width: 36px;

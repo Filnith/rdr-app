@@ -88,8 +88,11 @@ function recentEntries(withinHours) {
   return state.entries.filter(e => e.timestamp >= cutoff).sort((a, b) => b.timestamp - a.timestamp);
 }
 
+// Ne considère que les prises non archivées : une fois "Il est temps de rentrer"
+// cliqué, les prises de la soirée disparaissent de l'accueil (rangées dans le
+// journal) même si elles ont eu lieu dans les dernières 24h.
 function lastEntryPerSubstance(withinHours) {
-  const recents = recentEntries(withinHours);
+  const recents = recentEntries(withinHours).filter(e => !e.archived);
   const seen = new Map();
   for (const e of recents) {
     if (!seen.has(e.substanceId)) seen.set(e.substanceId, e);
@@ -125,7 +128,7 @@ function formatFraction(n) {
 // Cumul des quantités "en portions" (fractions/entiers de pilule) pour une substance
 // sur les dernières heures. Renvoie null si aucune quantité loggée n'est de ce type.
 function accumulatedDoseFraction(substanceId, withinHours) {
-  const entries = recentEntries(withinHours).filter(e => e.substanceId === substanceId);
+  const entries = recentEntries(withinHours).filter(e => e.substanceId === substanceId && !e.archived);
   let total = 0;
   let hasParsed = false;
   entries.forEach(e => {
@@ -196,13 +199,16 @@ let expandedTimerNotes = new Set();
 function renderHome() {
   const container = document.getElementById('active-timers');
   const heading = document.getElementById('active-timers-heading');
+  const endSessionBtn = document.getElementById('btn-end-session');
   const lasts = lastEntryPerSubstance(24);
   if (lasts.length === 0) {
     heading.hidden = true;
+    endSessionBtn.hidden = true;
     container.innerHTML = '';
     return;
   }
   heading.hidden = false;
+  endSessionBtn.hidden = false;
   container.innerHTML = lasts.map(e => {
     const sub = getSubstance(e.substanceId);
     const elapsedMs = Date.now() - e.timestamp;
@@ -243,7 +249,42 @@ function renderHome() {
   });
 }
 
+// Range toutes les prises actives (dernières 24h, non déjà archivées) dans le
+// journal sous une soirée nommée par la date du jour. Elles disparaissent de
+// l'accueil mais restent consultables intégralement dans le journal.
+function archiveCurrentSession() {
+  const cutoff = Date.now() - 24 * 3600000;
+  const label = 'Soirée du ' + new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  let count = 0;
+  state.entries.forEach(e => {
+    if (!e.archived && e.timestamp >= cutoff) {
+      e.archived = true;
+      e.sessionLabel = label;
+      count++;
+    }
+  });
+  if (count > 0) {
+    saveEntries();
+    expandedTimerNotes.clear();
+  }
+  renderHome();
+}
+
 // ---------- Journal ----------
+
+function renderJournalEntry(e) {
+  const sub = getSubstance(e.substanceId);
+  return '<div class="journal-entry" style="--sub-color:' + sub.color + '">' +
+    substanceIconBadge(sub, 'sm') +
+    '<div class="journal-entry-body">' +
+    '<strong>' + sub.name + '</strong>' +
+    (e.quantity ? ' — ' + escapeHtml(e.quantity) : '') +
+    '<div class="muted small">' + formatDateTime(e.timestamp) + '</div>' +
+    (e.note ? '<div class="small">' + escapeHtml(e.note) + '</div>' : '') +
+    '</div>' +
+    '<button class="icon-btn delete-entry" data-id="' + e.id + '" aria-label="Supprimer">✕</button>' +
+    '</div>';
+}
 
 function renderJournal() {
   const container = document.getElementById('journal-list');
@@ -252,19 +293,25 @@ function renderJournal() {
     container.innerHTML = '<p class="empty-state">Votre journal est vide.</p>';
     return;
   }
-  container.innerHTML = all.map(e => {
-    const sub = getSubstance(e.substanceId);
-    return '<div class="journal-entry" style="--sub-color:' + sub.color + '">' +
-      substanceIconBadge(sub, 'sm') +
-      '<div class="journal-entry-body">' +
-      '<strong>' + sub.name + '</strong>' +
-      (e.quantity ? ' — ' + escapeHtml(e.quantity) : '') +
-      '<div class="muted small">' + formatDateTime(e.timestamp) + '</div>' +
-      (e.note ? '<div class="small">' + escapeHtml(e.note) + '</div>' : '') +
-      '</div>' +
-      '<button class="icon-btn delete-entry" data-id="' + e.id + '" aria-label="Supprimer">✕</button>' +
-      '</div>';
-  }).join('');
+
+  const current = all.filter(e => !e.archived);
+  const archived = all.filter(e => e.archived);
+
+  const sessions = new Map();
+  archived.forEach(e => {
+    if (!sessions.has(e.sessionLabel)) sessions.set(e.sessionLabel, []);
+    sessions.get(e.sessionLabel).push(e);
+  });
+
+  let html = current.map(renderJournalEntry).join('');
+  sessions.forEach((entries, label) => {
+    html += '<details class="journal-session" open>' +
+      '<summary>' + escapeHtml(label) + ' <span class="muted small">(' + entries.length + ')</span></summary>' +
+      '<div class="journal-session-body">' + entries.map(renderJournalEntry).join('') + '</div>' +
+      '</details>';
+  });
+
+  container.innerHTML = html;
   container.querySelectorAll('.delete-entry').forEach(btn => {
     btn.addEventListener('click', () => {
       state.entries = state.entries.filter(e => e.id !== btn.dataset.id);
@@ -556,6 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btn-new-entry').addEventListener('click', openNewEntryModal);
+  document.getElementById('btn-end-session').addEventListener('click', archiveCurrentSession);
   document.getElementById('form-new-entry').addEventListener('submit', handleNewEntrySubmit);
   document.getElementById('btn-cancel-entry').addEventListener('click', () => closeModal(document.getElementById('modal-new-entry')));
 
