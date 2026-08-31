@@ -537,9 +537,19 @@ document.addEventListener('DOMContentLoaded', () => {
   loadState();
   showTab('accueil');
 
-  document.getElementById('btn-splash-start').addEventListener('click', () => {
-    document.getElementById('splash-screen').classList.add('splash-exit');
-  });
+  // Si l'écran de démarrage a déjà été passé pendant cette session (ex. Safari
+  // qui recharge silencieusement un onglet mis en arrière-plan), on ne le
+  // raffiche pas : ça pouvait donner l'impression que l'app "bloque" l'accès
+  // au menu du bas, caché derrière l'écran de démarrage revenu sans prévenir.
+  const splash = document.getElementById('splash-screen');
+  if (sessionStorage.getItem('rdr_splash_seen') === '1') {
+    splash.remove();
+  } else {
+    document.getElementById('btn-splash-start').addEventListener('click', () => {
+      splash.classList.add('splash-exit');
+      try { sessionStorage.setItem('rdr_splash_seen', '1'); } catch (e) {}
+    });
+  }
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showTab(btn.dataset.tab));

@@ -291,7 +291,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
+  gap: 1.3rem;
   width: auto;
   background: none;
   box-shadow: none;
@@ -310,7 +310,7 @@ main {
   background-image: url('../assets/illustrations/mdma-pill.png');
   background-size: cover;
   background-position: center;
-  box-shadow: 0 16px 38px -10px rgba(129, 140, 248, 0.6), 0 0 40px -6px rgba(244, 114, 182, 0.45);
+  box-shadow: none;
   transition: transform 0.15s ease;
 }
 .btn-cta-visual::after {
@@ -327,10 +327,12 @@ main {
 }
 #btn-new-entry.btn-cta-image .btn-cta-label {
   display: inline-block;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.03em;
   white-space: normal;
+  max-width: 220px;
   text-align: center;
-  line-height: 1.25;
+  line-height: 1.3;
   background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
   -webkit-background-clip: text;
   background-clip: text;
@@ -338,7 +340,7 @@ main {
   text-shadow: none;
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-visual {
-  box-shadow: 0 16px 38px -10px rgba(34, 197, 94, 0.65), 0 0 40px -6px rgba(74, 222, 128, 0.5);
+  box-shadow: none;
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-label {
   background: linear-gradient(90deg, #4ade80, #22c55e);
