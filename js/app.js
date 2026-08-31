@@ -419,6 +419,13 @@ let selectedQuantity = '';
 let selectedTimeOffsetMin = 0;
 
 function openNewEntryModal() {
+  const visual = document.querySelector('#btn-new-entry .btn-cta-visual');
+  if (visual) {
+    visual.classList.remove('btn-tap-pulse');
+    void visual.offsetWidth;
+    visual.classList.add('btn-tap-pulse');
+  }
+
   const modal = document.getElementById('modal-new-entry');
   selectedSubstanceId = null;
   selectedQuantity = '';
