@@ -933,10 +933,31 @@ main {
   width: 100%;
   max-width: 480px;
   border-radius: 16px 16px 0 0;
-  padding: 0.9rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
   max-height: 92vh;
   max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#form-new-entry {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.modal-scroll {
   overflow-y: auto;
+  min-height: 0;
+  padding: 0.9rem 1rem 0.6rem;
+}
+.modal-actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem calc(0.9rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--bg-elevated);
+  margin-top: 0;
 }
 .modal-content h2 {
   display: flex;
@@ -978,11 +999,6 @@ main {
   background: var(--bg);
   color: var(--text);
   font-size: 1rem;
-}
-.modal-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.7rem;
 }
 
 .warning-item {

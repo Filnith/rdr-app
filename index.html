@@ -151,25 +151,27 @@
 <!-- Modal : nouvelle prise -->
 <div id="modal-new-entry" class="modal">
   <div class="modal-content">
-    <h2>Nouvelle prise</h2>
     <form id="form-new-entry">
-      <label>Substance</label>
-      <div id="substance-picker" class="substance-grid"></div>
-      <p id="substance-picker-error" class="picker-error" hidden>Choisissez une substance ci-dessus.</p>
+      <div class="modal-scroll">
+        <h2>Nouvelle prise</h2>
+        <label>Substance</label>
+        <div id="substance-picker" class="substance-grid"></div>
+        <p id="substance-picker-error" class="picker-error" hidden>Choisissez une substance ci-dessus.</p>
 
-      <div id="quantity-section" class="picker-section" hidden>
-        <label>Quantité</label>
-        <div id="quantity-picker" class="chip-grid"></div>
-      </div>
+        <div id="quantity-section" class="picker-section" hidden>
+          <label>Quantité</label>
+          <div id="quantity-picker" class="chip-grid"></div>
+        </div>
 
-      <div class="picker-section">
-        <label>Moment de la prise</label>
-        <div id="time-picker" class="chip-grid"></div>
-      </div>
+        <div class="picker-section">
+          <label>Moment de la prise</label>
+          <div id="time-picker" class="chip-grid"></div>
+        </div>
 
-      <div class="picker-section">
-        <button type="button" id="btn-toggle-note" class="link-btn">+ Ajouter une note (optionnel)</button>
-        <input type="text" id="input-note" class="hidden-field" placeholder="ex. avec repas, contexte..." hidden>
+        <div class="picker-section">
+          <button type="button" id="btn-toggle-note" class="link-btn">+ Ajouter une note (optionnel)</button>
+          <input type="text" id="input-note" class="hidden-field" placeholder="ex. avec repas, contexte..." hidden>
+        </div>
       </div>
 
       <div class="modal-actions">
@@ -183,9 +185,11 @@
 <!-- Modal : avertissement interaction -->
 <div id="modal-warning" class="modal">
   <div class="modal-content">
-    <h2>⚠️ Avertissement</h2>
-    <p class="small">D'après votre journal des dernières 24h :</p>
-    <div id="warning-body"></div>
+    <div class="modal-scroll">
+      <h2>⚠️ Avertissement</h2>
+      <p class="small">D'après votre journal des dernières 24h :</p>
+      <div id="warning-body"></div>
+    </div>
     <div class="modal-actions">
       <button type="button" id="btn-warning-back" class="secondary-btn">Revenir en arrière</button>
       <button type="button" id="btn-warning-continue" class="primary-btn danger">Enregistrer quand même</button>
@@ -196,8 +200,10 @@
 <!-- Modal : confirmation fin de soirée -->
 <div id="modal-end-session" class="modal">
   <div class="modal-content">
-    <h2>On rentre ?</h2>
-    <p class="small">Confirmez-vous vouloir clôturer cette soirée ? Toutes les prises actives seront rangées dans le journal, sous <span id="end-session-label"></span>. Rien n'est supprimé.</p>
+    <div class="modal-scroll">
+      <h2>On rentre ?</h2>
+      <p class="small">Confirmez-vous vouloir clôturer cette soirée ? Toutes les prises actives seront rangées dans le journal, sous <span id="end-session-label"></span>. Rien n'est supprimé.</p>
+    </div>
     <div class="modal-actions">
       <button type="button" id="btn-end-session-cancel" class="secondary-btn">Annuler</button>
       <button type="button" id="btn-end-session-confirm" class="btn-archive-confirm">Oui, je rentre</button>
