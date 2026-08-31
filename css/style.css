@@ -291,7 +291,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.3rem;
   width: auto;
   background: none;
   box-shadow: none;
@@ -303,7 +302,9 @@ main {
 .btn-cta-visual {
   position: relative;
   overflow: hidden;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 210px;
   height: 210px;
   border-radius: 50%;
@@ -326,21 +327,30 @@ main {
   pointer-events: none;
 }
 #btn-new-entry.btn-cta-image .btn-cta-label {
+  position: relative;
+  z-index: 1;
   display: inline-block;
-  font-size: 1.4rem;
-  letter-spacing: 0.03em;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
   white-space: normal;
-  max-width: 220px;
+  max-width: 150px;
   text-align: center;
-  line-height: 1.3;
-  background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: none;
+  line-height: 1.2;
+  color: #fff;
+  -webkit-text-stroke: 3px rgba(15, 23, 42, 0.85);
+  paint-order: stroke fill;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-visual {
   box-shadow: none;
+  animation: pillBounce 0.55s ease;
+}
+@keyframes pillBounce {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.16) rotate(-5deg); }
+  55% { transform: scale(0.94) rotate(4deg); }
+  75% { transform: scale(1.05) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 #btn-new-entry.btn-cta-image.btn-success .btn-cta-label {
   background: linear-gradient(90deg, #4ade80, #22c55e);
