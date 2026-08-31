@@ -598,6 +598,36 @@ main {
 .journal-entry { border-left: 4px solid var(--sub-color, var(--border)); }
 .journal-entry-body { flex: 1; }
 
+.journal-current-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0 0 0.6rem;
+}
+.journal-current-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f472b6;
+  box-shadow: 0 0 8px 1px rgba(244, 114, 182, 0.7);
+  animation: sparkTwinkle 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.journal-current-group {
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px dashed var(--border);
+}
+
 .journal-session {
   margin-top: 1.4rem;
   margin-bottom: 0.8rem;

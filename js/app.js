@@ -317,7 +317,11 @@ function renderJournal() {
     sessions.get(e.sessionLabel).push(e);
   });
 
-  let html = current.map(renderJournalEntry).join('');
+  let html = '';
+  if (current.length > 0) {
+    html += '<p class="journal-current-label"><span class="journal-current-dot"></span>En cours</p>' +
+      '<div class="journal-current-group">' + current.map(renderJournalEntry).join('') + '</div>';
+  }
   sessions.forEach((entries, label) => {
     html += '<details class="journal-session" open>' +
       '<summary><svg class="session-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>' +
