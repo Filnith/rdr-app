@@ -603,6 +603,63 @@ main {
   margin-left: 0.2rem;
 }
 
+/* Carte timer avec visuel de substance en fond : le cumul de doses se
+   traduit par un remplissage progressif en couleurs vives depuis le bas
+   de l'image, le reste restant assombri. */
+.timer-card-visual { padding: 0; overflow: hidden; }
+.timer-visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.timer-visual-base,
+.timer-visual-fill {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+.timer-visual-base {
+  filter: grayscale(0.75) brightness(0.42) saturate(0.7);
+}
+.timer-visual-fill {
+  transition: clip-path 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.timer-visual-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.5) 38%, rgba(15, 23, 42, 0.05) 62%, transparent 100%);
+}
+.timer-visual-content {
+  position: relative;
+  z-index: 1;
+  padding: 0.9rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.2rem;
+}
+.timer-visual-content .timer-card-head { margin-bottom: 0.1rem; }
+.timer-visual-content .timer-card-title { color: #fff; }
+.timer-visual-content .timer-elapsed { color: #fff; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
+.timer-visual-content .timer-status.ok { color: #86efac; }
+.timer-visual-content .timer-status.wait { color: #fcd34d; }
+.dose-progress-label-visual {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 0.15rem;
+}
+.timer-card-visual .timer-note {
+  padding: 0.6rem 0.9rem 0.9rem;
+  margin-top: 0;
+  border-top: none;
+}
+
 .journal-entry, .contact-row {
   background: var(--card);
   border: 1px solid var(--border);
