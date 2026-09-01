@@ -86,25 +86,17 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
 .hero-compact .hero-title { font-size: 1.8rem; }
 .hero-compact .hero-subtitle { font-size: 0.88rem; }
 
-.hero-accueil { padding: 0.2rem 0 0.6rem; }
+/* Respire par rapport à la barre d'avertissement du header, et se
+   rapproche visuellement du bouton juste en dessous : c'est sa légende,
+   pas un titre qui doit rivaliser avec lui. */
+.hero-accueil { padding: 1.4rem 0 0.3rem; }
 .hero-accueil .hero-subtitle {
   font-family: var(--font-cta);
-  font-size: clamp(0.66rem, 3.9vw, 1rem);
-  font-weight: 800;
-  text-transform: uppercase;
+  font-size: clamp(0.72rem, 3.6vw, 0.92rem);
+  font-weight: 600;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  opacity: 0.62;
-  color: transparent;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 50%, #ffffff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-stroke: 0.6px rgba(255,255,255,0.75);
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.55),
-    0 2px 10px rgba(56,189,248,0.45),
-    0 -2px 8px rgba(167,139,250,0.4);
-  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));
+  color: #a8b3d6;
 }
 
 .accueil-hero-zone {
