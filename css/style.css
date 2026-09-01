@@ -36,6 +36,16 @@ body {
   color: var(--text);
   padding-bottom: calc(72px + env(safe-area-inset-bottom));
 }
+/* Empêche la page de fond de défiler (scroll chaining sur iOS) pendant
+   qu'une modale est ouverte : sinon un geste de swipe dans la modale peut
+   scroller la page derrière au lieu du contenu de la modale, et le bouton
+   d'action de la modale devient inatteignable. */
+body.modal-lock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
 
 h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display); font-weight: 600; }
 

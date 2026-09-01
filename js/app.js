@@ -497,7 +497,7 @@ function openNewEntryModal() {
   document.getElementById('input-note').value = '';
   document.getElementById('btn-toggle-note').textContent = '+ Ajouter une note (optionnel)';
 
-  modal.classList.add('open');
+  openModal(modal);
 }
 
 function renderQuantityPicker(substanceId) {
@@ -543,8 +543,30 @@ function renderTimePicker() {
   });
 }
 
+let modalScrollY = 0;
+
+function syncBodyScrollLock() {
+  const anyOpen = document.querySelectorAll('.modal.open').length > 0;
+  const locked = document.body.classList.contains('modal-lock');
+  if (anyOpen && !locked) {
+    modalScrollY = window.scrollY;
+    document.body.classList.add('modal-lock');
+    document.body.style.top = -modalScrollY + 'px';
+  } else if (!anyOpen && locked) {
+    document.body.classList.remove('modal-lock');
+    document.body.style.top = '';
+    window.scrollTo(0, modalScrollY);
+  }
+}
+
+function openModal(modal) {
+  modal.classList.add('open');
+  syncBodyScrollLock();
+}
+
 function closeModal(modal) {
   modal.classList.remove('open');
+  syncBodyScrollLock();
 }
 
 function handleNewEntrySubmit(evt) {
@@ -602,7 +624,7 @@ function showInteractionWarning(warnings) {
       '</div>';
   }).join('');
   document.getElementById('modal-new-entry').classList.remove('open');
-  modal.classList.add('open');
+  openModal(modal);
 }
 
 function commitEntry(entry) {
@@ -610,6 +632,7 @@ function commitEntry(entry) {
   saveEntries();
   document.getElementById('modal-new-entry').classList.remove('open');
   document.getElementById('modal-warning').classList.remove('open');
+  syncBodyScrollLock();
   state.pendingEntry = null;
   showTab('accueil');
   triggerSaveAnimation();
@@ -670,7 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-new-entry').addEventListener('click', openNewEntryModal);
   document.getElementById('btn-end-session').addEventListener('click', () => {
     document.getElementById('end-session-label').textContent = '"' + currentSessionLabel() + '"';
-    document.getElementById('modal-end-session').classList.add('open');
+    openModal(document.getElementById('modal-end-session'));
   });
   document.getElementById('btn-end-session-cancel').addEventListener('click', () => {
     closeModal(document.getElementById('modal-end-session'));
