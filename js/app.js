@@ -733,6 +733,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    // updateViaCache: 'none' force le navigateur à toujours revérifier
+    // sw.js sur le réseau plutôt que d'utiliser son cache HTTP (GitHub
+    // Pages sert sw.js avec Cache-Control: max-age=600, que Safari peut
+    // appliquer même à cette vérification de mise à jour du service
+    // worker) : sans ça, une nouvelle version pouvait ne jamais être
+    // détectée pendant les 10 minutes suivant un déploiement.
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+      reg.update();
+    }).catch(() => {});
   }
 });
