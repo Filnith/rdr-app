@@ -24,7 +24,7 @@ const SUBSTANCES = [
     name: 'MDMA / Ecstasy',
     category: 'Stimulant empathogène',
     color: '#f472b6',
-    icon: '<circle cx="12" cy="12" r="7"/><path d="M12 8.5v7M8.5 12h7" stroke-width="1.4"/>',
+    icon: '<rect x="2.5" y="8.5" width="19" height="7" rx="3.5"/><path d="M12 8.5v7" stroke-width="1.4"/>',
     illustration: 'mdma.jpg',
     dureeEffets: '3 à 6h (montée 30-60 min)',
     minIntervalMin: 240,
