@@ -553,27 +553,14 @@ function renderTimePicker() {
   });
 }
 
-let modalScrollY = 0;
-
-// Verrouille <html>, pas <body> : body est le conteneur flex qui porte le
-// menu du bas en position:sticky, et lui appliquer position:fixed à
-// répétition (à chaque ouverture/fermeture de modale) pouvait laisser le
-// calcul du sticky de Safari iOS dans un état incohérent juste après la
-// fermeture (menu du bas caché tant qu'on ne déclenchait pas un reflow,
-// ex. en scrollant). <html> n'a aucun descendant sticky à perturber.
+// Le document (html/body) ne défile jamais (voir css/style.css) : seul
+// <main> défile en interne. Empêcher le scroll de fond pendant qu'une
+// modale est ouverte revient donc simplement à geler le scroll de <main> ;
+// overflow:hidden conserve sa position de scroll telle quelle, pas besoin
+// de la sauvegarder/restaurer manuellement.
 function syncBodyScrollLock() {
   const anyOpen = document.querySelectorAll('.modal.open').length > 0;
-  const root = document.documentElement;
-  const locked = root.classList.contains('modal-lock');
-  if (anyOpen && !locked) {
-    modalScrollY = window.scrollY;
-    root.classList.add('modal-lock');
-    root.style.top = -modalScrollY + 'px';
-  } else if (!anyOpen && locked) {
-    root.classList.remove('modal-lock');
-    root.style.top = '';
-    window.scrollTo(0, modalScrollY);
-  }
+  document.querySelector('main').classList.toggle('scroll-lock', anyOpen);
 }
 
 function openModal(modal) {

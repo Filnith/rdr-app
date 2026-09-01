@@ -18,41 +18,35 @@
 
 * { box-sizing: border-box; }
 
+/* Structure "app shell" : le document (html/body) ne défile jamais, seul
+   <main> défile en interne. Après plusieurs allers-retours entre
+   position:fixed et position:sticky pour le menu du bas — chacun ayant
+   son propre bug de mesure de la zone visible sur Safari iOS (barre
+   d'outils rétractable) selon que le document défile ou non — c'est la
+   seule approche qui élimine complètement le problème : le menu n'est
+   plus jamais positionné "par rapport au viewport" en dépendant d'une
+   mesure dvh/svh/safe-area fiable à un instant donné, il est simplement
+   le dernier élément d'une colonne dont la hauteur totale est bloquée à
+   la hauteur de l'écran.
+*/
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
 html {
   background: var(--bg);
-  height: 100%;
 }
 body {
   margin: 0;
-  /* svh (small viewport height, la valeur la plus sûre : elle suppose la
-     barre d'outils de Safari toujours dépliée) plutôt que dvh ou
-     -webkit-fill-available. Ces deux dernières peuvent, à cause de bugs de
-     mesure sur Safari iOS, retourner la hauteur du GRAND viewport (comme
-     si la barre était rétractée) : le menu du bas, en fin de page, se
-     retrouvait alors positionné derrière la barre d'outils réellement
-     affichée, donc inatteignable. svh ne surestime jamais. */
-  min-height: 100vh;
-  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
-  /* Réserve la place du menu du bas, qui repasse en position:fixed (voir
-     .bottom-nav) : position:sticky a son propre bug connu sur Safari iOS,
-     où le décalage ne tient pas toujours compte de la zone sûre/barre
-     d'outils, contrairement à position:fixed + env(safe-area-inset-bottom)
-     qui est le pattern standard et fiable pour un menu de PWA sur iOS. */
-  padding-bottom: calc(72px + env(safe-area-inset-bottom));
 }
-/* Empêche la page de fond de défiler (scroll chaining sur iOS) pendant
-   qu'une modale est ouverte : sinon un geste de swipe dans la modale peut
-   scroller la page derrière au lieu du contenu de la modale, et le bouton
-   d'action de la modale devient inatteignable. Verrouille <html>, pas
-   <body> : voir le commentaire de syncBodyScrollLock() dans app.js. */
-html.modal-lock {
-  position: fixed;
-  left: 0;
-  right: 0;
-  overflow: hidden;
+.app-header,
+.bottom-nav {
+  flex-shrink: 0;
 }
 
 h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display); font-weight: 600; }
@@ -256,8 +250,6 @@ h2 { font-size: 1.1rem; font-family: var(--font-display); font-weight: 600; colo
   background: var(--bg-elevated);
   padding: 0.2rem 0.75rem;
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
   z-index: 10;
 }
 .disclaimer {
@@ -269,9 +261,17 @@ h2 { font-size: 1.1rem; font-family: var(--font-display); font-weight: 600; colo
 .disclaimer strong { color: var(--text); }
 
 main {
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: 1rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+main.scroll-lock {
+  overflow-y: hidden;
 }
 
 .tab-panel { display: none; }
@@ -923,10 +923,6 @@ main {
 .inline-form button { width: auto; }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: flex;
   gap: 0.4rem;
   background: var(--bg-elevated);
