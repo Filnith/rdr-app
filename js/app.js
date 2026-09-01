@@ -268,42 +268,17 @@ function renderHome() {
     const intensity = doseIntensity(doseTotal, sub.criticalDoseTotal);
     const cardColor = escalatedColor(sub.color, doseTotal, sub.criticalDoseTotal);
     const cardTintPct = Math.round(16 + intensity * 46);
-    const chevron = '<svg class="timer-toggle-chevron' + (isExpanded ? ' open' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
-    const noteHtml = isExpanded ? '<div class="timer-note">' + sub.conseilRedose + '</div>' : '';
-
-    if (sub.visual) {
-      // Remplissage progressif de la photo de la substance depuis le bas,
-      // à mesure que le cumul de doses de la soirée augmente.
-      const fillPct = Math.round(Math.min(doseTotal || 0, 1) * 100);
-      const visualUrl = 'assets/illustrations/' + sub.visual;
-      return '<div class="timer-card timer-card-visual">' +
-        '<div class="timer-visual">' +
-        '<div class="timer-visual-base" style="background-image:url(\'' + visualUrl + '\')"></div>' +
-        '<div class="timer-visual-fill" style="background-image:url(\'' + visualUrl + '\'); clip-path: inset(' + (100 - fillPct) + '% 0 0 0)"></div>' +
-        '<div class="timer-visual-scrim"></div>' +
-        '<div class="timer-visual-content">' +
-        '<div class="timer-card-head">' +
-        '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '"><strong>' + sub.name + '</strong>' + chevron + '</button>' +
-        '</div>' +
-        '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
-        '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
-        (doseTotal !== null ? '<div class="dose-progress-label-visual">Cumul : ' + formatFraction(doseTotal) + '</div>' : '') +
-        '</div>' +
-        '</div>' +
-        noteHtml +
-        '</div>';
-    }
-
     return '<div class="timer-card" style="--sub-color:' + cardColor + '; --card-tint:' + cardTintPct + '%">' +
       '<div class="timer-card-head">' +
       '<button type="button" class="timer-card-title timer-toggle" data-substance-id="' + e.substanceId + '">' +
-      substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong>' + chevron +
+      substanceIconBadge(sub, 'sm') + '<strong>' + sub.name + '</strong>' +
+      '<svg class="timer-toggle-chevron' + (isExpanded ? ' open' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>' +
       '</button>' +
       '</div>' +
       '<div class="timer-elapsed">' + formatElapsed(elapsedMs) + ' <span class="muted">depuis la dernière prise</span></div>' +
       '<div class="timer-status ' + statusClass + '">' + statusText + '</div>' +
       (doseTotal !== null ? renderDoseProgress(sub, doseTotal) : '') +
-      noteHtml +
+      (isExpanded ? '<div class="timer-note">' + sub.conseilRedose + '</div>' : '') +
       '</div>';
   }).join('');
 

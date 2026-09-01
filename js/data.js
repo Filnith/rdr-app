@@ -26,7 +26,6 @@ const SUBSTANCES = [
     color: '#f472b6',
     icon: '<circle cx="12" cy="12" r="7"/><path d="M12 8.5v7M8.5 12h7" stroke-width="1.4"/>',
     illustration: 'mdma.jpg',
-    visual: 'mdma-visual.jpg',
     dureeEffets: '3 à 6h (montée 30-60 min)',
     minIntervalMin: 240,
     criticalDoseTotal: 1.5,
