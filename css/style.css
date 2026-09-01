@@ -21,16 +21,18 @@
 html {
   background: var(--bg);
   height: 100%;
-  /* Évite le décalage/barre noire au chargement sur Safari mobile : la barre
-     d'adresse rétractable fait que 100vh au premier rendu ne correspond pas
-     à la zone réellement visible tant que l'utilisateur n'a pas scrollé. */
-  height: -webkit-fill-available;
 }
 body {
   margin: 0;
+  /* svh (small viewport height, la valeur la plus sûre : elle suppose la
+     barre d'outils de Safari toujours dépliée) plutôt que dvh ou
+     -webkit-fill-available. Ces deux dernières peuvent, à cause de bugs de
+     mesure sur Safari iOS, retourner la hauteur du GRAND viewport (comme
+     si la barre était rétractée) : le menu du bas, en fin de page, se
+     retrouvait alors positionné derrière la barre d'outils réellement
+     affichée, donc inatteignable. svh ne surestime jamais. */
   min-height: 100vh;
-  min-height: 100dvh;
-  min-height: -webkit-fill-available;
+  min-height: 100svh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
