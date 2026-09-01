@@ -1,4 +1,4 @@
-const CACHE_NAME = 'drug-check-v11';
+const CACHE_NAME = 'drug-check-v12';
 const ASSETS = [
   './',
   './index.html',
