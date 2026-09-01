@@ -555,16 +555,23 @@ function renderTimePicker() {
 
 let modalScrollY = 0;
 
+// Verrouille <html>, pas <body> : body est le conteneur flex qui porte le
+// menu du bas en position:sticky, et lui appliquer position:fixed à
+// répétition (à chaque ouverture/fermeture de modale) pouvait laisser le
+// calcul du sticky de Safari iOS dans un état incohérent juste après la
+// fermeture (menu du bas caché tant qu'on ne déclenchait pas un reflow,
+// ex. en scrollant). <html> n'a aucun descendant sticky à perturber.
 function syncBodyScrollLock() {
   const anyOpen = document.querySelectorAll('.modal.open').length > 0;
-  const locked = document.body.classList.contains('modal-lock');
+  const root = document.documentElement;
+  const locked = root.classList.contains('modal-lock');
   if (anyOpen && !locked) {
     modalScrollY = window.scrollY;
-    document.body.classList.add('modal-lock');
-    document.body.style.top = -modalScrollY + 'px';
+    root.classList.add('modal-lock');
+    root.style.top = -modalScrollY + 'px';
   } else if (!anyOpen && locked) {
-    document.body.classList.remove('modal-lock');
-    document.body.style.top = '';
+    root.classList.remove('modal-lock');
+    root.style.top = '';
     window.scrollTo(0, modalScrollY);
   }
 }

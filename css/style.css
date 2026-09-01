@@ -45,8 +45,9 @@ body {
 /* Empêche la page de fond de défiler (scroll chaining sur iOS) pendant
    qu'une modale est ouverte : sinon un geste de swipe dans la modale peut
    scroller la page derrière au lieu du contenu de la modale, et le bouton
-   d'action de la modale devient inatteignable. */
-body.modal-lock {
+   d'action de la modale devient inatteignable. Verrouille <html>, pas
+   <body> : voir le commentaire de syncBodyScrollLock() dans app.js. */
+html.modal-lock {
   position: fixed;
   left: 0;
   right: 0;
