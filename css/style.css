@@ -34,7 +34,13 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
-  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  /* Colonne flex + menu du bas en "sticky" plutôt que "fixed" : sur Safari
+     iOS, un élément position:fixed peut se désynchroniser de l'écran
+     réellement visible quand la barre d'adresse se rétracte/déplie (il
+     "disparaît" jusqu'au prochain scroll). Un élément sticky en fin de
+     colonne flex n'a pas ce problème car il reste dans le flux normal. */
+  display: flex;
+  flex-direction: column;
 }
 /* Empêche la page de fond de défiler (scroll chaining sur iOS) pendant
    qu'une modale est ouverte : sinon un geste de swipe dans la modale peut
@@ -257,9 +263,11 @@ h2 { font-size: 1.1rem; font-family: var(--font-display); font-weight: 600; colo
 .disclaimer strong { color: var(--text); }
 
 main {
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: 1rem;
+  flex: 1 0 auto;
 }
 
 .tab-panel { display: none; }
@@ -911,10 +919,9 @@ main {
 .inline-form button { width: auto; }
 
 .bottom-nav {
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  left: 0;
-  right: 0;
+  flex-shrink: 0;
   display: flex;
   gap: 0.4rem;
   background: var(--bg-elevated);
