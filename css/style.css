@@ -89,12 +89,14 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
 .hero-accueil { padding: 0.2rem 0 0.6rem; }
 .hero-accueil .hero-subtitle {
   font-family: var(--font-cta);
-  font-size: 1.2rem;
+  font-size: clamp(0.66rem, 3.9vw, 1rem);
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  opacity: 0.85;
   color: transparent;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.4) 50%, #ffffff 100%);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 50%, #ffffff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-stroke: 0.6px rgba(255,255,255,0.75);
@@ -112,8 +114,13 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
   transition: min-height 0.4s ease;
 }
 .accueil-hero-zone.centered {
-  min-height: 58vh;
-  min-height: 58dvh;
+  /* svh (small viewport height) plutôt que dvh : dvh peut être mesuré trop
+     grand au tout premier rendu sur Safari iOS (barre d'adresse encore
+     dépliée), ce qui rendait la page plus haute que l'écran réellement
+     visible et cassait l'affichage du menu du bas (position: fixed) tant
+     que l'utilisateur n'avait pas scrollé une première fois. */
+  min-height: 52vh;
+  min-height: 52svh;
   justify-content: center;
 }
 
