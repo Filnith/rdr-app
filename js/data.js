@@ -156,7 +156,8 @@ const INTERACTIONS = {
   'alcool|mdma': { level: 'prudence', message: 'Prudence : l\'alcool masque les signaux d\'alerte du corps et accentue la déshydratation.' },
   'cannabis|mdma': { level: 'prudence', message: 'Prudence : peut augmenter l\'anxiété et la tachycardie chez certaines personnes.' },
   'cannabis|lsd': { level: 'prudence', message: 'Prudence : peut amplifier l\'intensité et l\'anxiété de l\'expérience.' },
-  'mdma|speed': { level: 'risque', message: 'Risque élevé : cumul de stimulants, forte hausse de la température corporelle et du rythme cardiaque.' }
+  'mdma|speed': { level: 'risque', message: 'Risque élevé : cumul de stimulants, forte hausse de la température corporelle et du rythme cardiaque.' },
+  'cocaine|mdma': { level: 'risque', message: 'Risque élevé : charge cardiovasculaire cumulée, et la cocaïne réduit une partie des effets recherchés du MDMA.' }
 };
 
 // Options de quantité proposées en un tap, par substance — aucune saisie clavier requise.

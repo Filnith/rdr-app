@@ -45,12 +45,26 @@ function loadState() {
   }
 }
 
+// Renvoie true/false plutôt que de laisser remonter l'erreur : le stockage
+// peut échouer (navigation privée sur d'anciennes versions de Safari, quota
+// plein...) et un échec silencieux ferait croire qu'une prise est enregistrée
+// alors qu'elle ne l'est pas.
 function saveEntries() {
-  localStorage.setItem(STORAGE_KEYS.entries, JSON.stringify(state.entries));
+  try {
+    localStorage.setItem(STORAGE_KEYS.entries, JSON.stringify(state.entries));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function saveContacts() {
-  localStorage.setItem(STORAGE_KEYS.contacts, JSON.stringify(state.contacts));
+  try {
+    localStorage.setItem(STORAGE_KEYS.contacts, JSON.stringify(state.contacts));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 // ---------- Navigation ----------
@@ -261,6 +275,7 @@ function renderHome() {
   endSessionBtn.hidden = false;
   container.innerHTML = lasts.map(e => {
     const sub = getSubstance(e.substanceId);
+    if (!sub) return ''; // substance inconnue (donnée corrompue ou retirée) : on ignore plutôt que de planter tout l'affichage
     const elapsedMs = Date.now() - e.timestamp;
     const minIntervalMs = sub.minIntervalMin * 60000;
     const remainingMs = minIntervalMs - elapsedMs;
@@ -338,6 +353,7 @@ function confirmEndSession() {
 
 function renderJournalEntry(e) {
   const sub = getSubstance(e.substanceId);
+  if (!sub) return ''; // substance inconnue (donnée corrompue ou retirée) : on ignore plutôt que de planter tout le journal
   return '<div class="journal-entry" style="--sub-color:' + sub.color + '">' +
     substanceIconBadge(sub, 'sm') +
     '<div class="journal-entry-body">' +
@@ -383,8 +399,14 @@ function renderJournal() {
   container.innerHTML = html;
   container.querySelectorAll('.delete-entry').forEach(btn => {
     btn.addEventListener('click', () => {
+      if (!confirm('Supprimer cette prise du journal ? Cette action est définitive.')) return;
+      const previous = state.entries;
       state.entries = state.entries.filter(e => e.id !== btn.dataset.id);
-      saveEntries();
+      if (!saveEntries()) {
+        state.entries = previous;
+        alert('Impossible de supprimer cette prise (stockage indisponible).');
+        return;
+      }
       renderJournal();
       renderHome();
     });
@@ -448,8 +470,14 @@ function renderContacts() {
     }).join('');
     container.querySelectorAll('.delete-contact').forEach(btn => {
       btn.addEventListener('click', () => {
+        if (!confirm('Supprimer ce contact de confiance ?')) return;
+        const previous = state.contacts;
         state.contacts = state.contacts.filter(c => c.id !== btn.dataset.id);
-        saveContacts();
+        if (!saveContacts()) {
+          state.contacts = previous;
+          alert('Impossible de supprimer ce contact (stockage indisponible).');
+          return;
+        }
         renderContacts();
       });
     });
@@ -458,7 +486,11 @@ function renderContacts() {
 
 function addContact(name, phone) {
   state.contacts.push({ id: generateId(), name, phone });
-  saveContacts();
+  if (!saveContacts()) {
+    state.contacts.pop();
+    alert('Impossible d\'enregistrer ce contact (stockage indisponible ou plein).');
+    return;
+  }
   renderContacts();
 }
 
@@ -633,7 +665,11 @@ function showInteractionWarning(warnings) {
 
 function commitEntry(entry) {
   state.entries.push(entry);
-  saveEntries();
+  if (!saveEntries()) {
+    state.entries.pop();
+    alert('Impossible d\'enregistrer cette prise (stockage indisponible ou plein). Vérifiez que la navigation privée n\'est pas activée.');
+    return;
+  }
   document.getElementById('modal-new-entry').classList.remove('open');
   document.getElementById('modal-warning').classList.remove('open');
   syncBodyScrollLock();
