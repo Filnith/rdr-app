@@ -30,13 +30,14 @@
    la hauteur de l'écran.
 */
 html, body {
-  /* dvh (dynamic viewport height) suit en continu la zone réellement
-     visible, y compris quand la barre d'outils de Safari se
-     rétracte/déplie — contrairement à height:100% qui pouvait laisser un
-     vide en bas de l'écran une fois la barre rétractée (100% ne se
-     réajuste pas de la même façon). */
+  /* --app-height est calculée en JS via window.visualViewport (voir
+     setAppHeight() dans app.js) : plus fiable que dvh seul, dont le
+     recalcul par le navigateur après rétraction de la barre d'outils
+     s'est révélé incohérent selon les versions de Safari/Chrome iOS.
+     dvh reste un filet de secours tant que le JS n'a pas encore tourné. */
   height: 100%;
   height: 100dvh;
+  height: var(--app-height, 100dvh);
   overflow: hidden;
 }
 html {

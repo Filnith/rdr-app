@@ -670,6 +670,27 @@ setInterval(() => {
   if (homeTab.classList.contains('active')) renderHome();
 }, 30000);
 
+// ---------- Hauteur réelle de l'écran (shell app) ----------
+
+// CSS seul (dvh, svh, -webkit-fill-available...) s'est révélé peu fiable
+// pour suivre la zone réellement visible sur mobile : selon les versions
+// de Safari/Chrome iOS, la barre d'outils peut se rétracter sans que le
+// navigateur ne redéclenche le recalcul de dvh, laissant un vide ou un
+// débordement. window.visualViewport donne la taille réellement visible
+// et prévient explicitement de tout changement (clavier, barre d'outils,
+// zoom) : on la pousse dans une variable CSS que le shell utilise.
+function setAppHeight() {
+  const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', h + 'px');
+}
+setAppHeight();
+window.addEventListener('resize', setAppHeight);
+window.addEventListener('orientationchange', setAppHeight);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', setAppHeight);
+  window.visualViewport.addEventListener('scroll', setAppHeight);
+}
+
 // ---------- Init ----------
 
 document.addEventListener('DOMContentLoaded', () => {
