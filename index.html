@@ -57,13 +57,15 @@
 <main>
 
   <section id="tab-accueil" class="tab-panel active">
-    <div class="hero hero-accueil">
-      <p class="hero-subtitle">Reste maître de ta soirée, en toute sécurité.</p>
+    <div id="accueil-hero-zone" class="accueil-hero-zone">
+      <div class="hero hero-accueil">
+        <p class="hero-subtitle">Reste maître de ta soirée, en toute sécurité.</p>
+      </div>
+      <button id="btn-new-entry" class="btn-cta-image" aria-label="Enregistrer une conso">
+        <span class="btn-cta-visual"></span>
+      </button>
     </div>
-    <button id="btn-new-entry" class="btn-cta-image" aria-label="Enregistrer une conso">
-      <span class="btn-cta-visual"></span>
-    </button>
-    <h2 class="section-title" id="active-timers-heading" hidden>Depuis les dernières prises</h2>
+    <p class="session-mood-text" id="session-mood-text" hidden></p>
     <div id="active-timers"></div>
     <button id="btn-end-session" class="btn-archive" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>

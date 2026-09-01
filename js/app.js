@@ -196,18 +196,58 @@ function escalatedColor(baseColor, doseTotal, criticalTotal) {
 
 let expandedTimerNotes = new Set();
 
+// Texte d'ambiance qui évolue avec le nombre de prises de la soirée en cours
+// (toutes substances confondues), couleur de plus en plus intense à mesure
+// qu'on avance dans la liste.
+const SESSION_MOOD_MESSAGES = [
+  'Ça démarre tranquillement mon pote !',
+  'Ce soir on est là pour s\'éclater comme il faut !',
+  'Wow ça commence à chauffer là-dedans !',
+  'J\'suis complètement déglingos !',
+  'On va pas se mentir, j\'suis complètement high de l\'espace',
+  'Il est temps de rentrer gringos !',
+  'La dernière pour la route'
+];
+const MOOD_COOL_STOPS = ['#38bdf8', '#a78bfa'];
+const MOOD_HOT_STOPS = ['#fb923c', '#ef4444'];
+
+function activeSessionEntryCount() {
+  const cutoff = Date.now() - 24 * 3600000;
+  return state.entries.filter(e => !e.archived && e.timestamp >= cutoff).length;
+}
+
+function renderSessionMood(count) {
+  const el = document.getElementById('session-mood-text');
+  if (count <= 0) {
+    el.hidden = true;
+    return;
+  }
+  const idx = Math.min(count - 1, SESSION_MOOD_MESSAGES.length - 1);
+  const t = idx / (SESSION_MOOD_MESSAGES.length - 1);
+  const stop1 = mixColors(MOOD_COOL_STOPS[0], MOOD_HOT_STOPS[0], t);
+  const stop2 = mixColors(MOOD_COOL_STOPS[1], MOOD_HOT_STOPS[1], t);
+  el.hidden = false;
+  el.textContent = SESSION_MOOD_MESSAGES[idx];
+  el.style.background = 'linear-gradient(90deg, ' + stop1 + ', ' + stop2 + ')';
+  el.style.webkitBackgroundClip = 'text';
+  el.style.backgroundClip = 'text';
+  el.style.color = 'transparent';
+}
+
 function renderHome() {
   const container = document.getElementById('active-timers');
-  const heading = document.getElementById('active-timers-heading');
+  const heroZone = document.getElementById('accueil-hero-zone');
   const endSessionBtn = document.getElementById('btn-end-session');
   const lasts = lastEntryPerSubstance(24);
   if (lasts.length === 0) {
-    heading.hidden = true;
+    heroZone.classList.add('centered');
+    renderSessionMood(0);
     endSessionBtn.hidden = true;
     container.innerHTML = '';
     return;
   }
-  heading.hidden = false;
+  heroZone.classList.remove('centered');
+  renderSessionMood(activeSessionEntryCount());
   endSessionBtn.hidden = false;
   container.innerHTML = lasts.map(e => {
     const sub = getSubstance(e.substanceId);
