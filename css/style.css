@@ -94,7 +94,7 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  opacity: 0.85;
+  opacity: 0.62;
   color: transparent;
   background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 50%, #ffffff 100%);
   -webkit-background-clip: text;
@@ -119,8 +119,8 @@ h1 { font-size: 1.4rem; margin: 0.4rem 0 1rem; font-family: var(--font-display);
      dépliée), ce qui rendait la page plus haute que l'écran réellement
      visible et cassait l'affichage du menu du bas (position: fixed) tant
      que l'utilisateur n'avait pas scrollé une première fois. */
-  min-height: 52vh;
-  min-height: 52svh;
+  min-height: 60vh;
+  min-height: 60svh;
   justify-content: center;
 }
 
