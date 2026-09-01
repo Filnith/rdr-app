@@ -227,7 +227,10 @@ function renderSessionMood(count) {
   const stop1 = mixColors(MOOD_COOL_STOPS[0], MOOD_HOT_STOPS[0], t);
   const stop2 = mixColors(MOOD_COOL_STOPS[1], MOOD_HOT_STOPS[1], t);
   el.hidden = false;
-  el.textContent = SESSION_MOOD_MESSAGES[idx];
+  // Espace insécable avant le "!" final pour qu'il ne se retrouve jamais
+  // seul sur sa propre ligne.
+  el.textContent = SESSION_MOOD_MESSAGES[idx].replace(/ ([^ ]*!)$/, ' $1');
+  el.classList.toggle('mood-oneline', idx === 1);
   el.style.background = 'linear-gradient(90deg, ' + stop1 + ', ' + stop2 + ')';
   el.style.webkitBackgroundClip = 'text';
   el.style.backgroundClip = 'text';
