@@ -25,6 +25,7 @@ const SUBSTANCES = [
     category: 'Stimulant empathogène',
     color: '#f472b6',
     icon: '<rect x="2.5" y="8.5" width="19" height="7" rx="3.5"/><path d="M12 8.5v7" stroke-width="1.4"/>',
+    fillDirection: 'horizontal',
     illustration: 'mdma.jpg',
     dureeEffets: '3 à 6h (montée 30-60 min)',
     minIntervalMin: 240,

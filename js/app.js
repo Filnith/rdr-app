@@ -149,12 +149,19 @@ function renderDoseProgress(sub, total) {
     remaining -= 1;
   }
   const iconSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + sub.icon + '</svg>';
+  // Gélule horizontale (MDMA) : remplissage de gauche à droite, plus lisible
+  // que le remplissage de bas en haut utilisé pour les icônes verticales
+  // (verre, flacon, feuille...).
+  const horizontal = sub.fillDirection === 'horizontal';
   return '<div class="dose-progress">' +
     units.map(f => {
-      const clipTop = Math.round((1 - f) * 100);
+      const clipPct = Math.round((1 - f) * 100);
+      const clipPath = horizontal
+        ? 'inset(0 ' + clipPct + '% 0 0)'
+        : 'inset(' + clipPct + '% 0 0 0)';
       return '<span class="dose-icon" style="color:' + sub.color + '">' +
         '<span class="dose-icon-base">' + iconSvg + '</span>' +
-        '<span class="dose-icon-fill" style="clip-path: inset(' + clipTop + '% 0 0 0)">' + iconSvg + '</span>' +
+        '<span class="dose-icon-fill" style="clip-path: ' + clipPath + '">' + iconSvg + '</span>' +
         '</span>';
     }).join('') +
     '<span class="dose-progress-label">Cumul : ' + formatFraction(total) + '</span>' +
