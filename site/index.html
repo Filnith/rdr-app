@@ -229,6 +229,16 @@
   }
   .guide-steps { display: none; flex-direction: column; gap: 0.7rem; }
   .guide-steps.active { display: flex; }
+  .guide-hint {
+    font-size: 0.8rem;
+    color: #c4b5fd;
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: 10px;
+    padding: 0.7rem 0.85rem;
+    margin: 0 0 0.9rem;
+    line-height: 1.45;
+  }
   .guide-step {
     display: flex;
     align-items: flex-start;
@@ -439,6 +449,7 @@
     </div>
 
     <div class="guide-steps active" id="guide-ios">
+      <p class="guide-hint">📍 Pas de bouton "installer" possible ici — Apple ne l'autorise pas. Les 2 étapes ci-dessous se font avec les boutons de <strong>ton navigateur</strong> (en haut ou en bas de l'écran), pas sur cette page.</p>
       <div class="guide-step">
         <span class="guide-step-num">1</span>
         <p>Appuie sur l'icône <strong>Partager</strong>
@@ -492,6 +503,7 @@
 <div class="modal-overlay" id="ios-modal" hidden>
   <div class="modal-panel">
     <h2>Installer sur iPhone</h2>
+    <p class="guide-hint">📍 Pas de bouton "installer" possible ici — Apple ne l'autorise pas. Les 2 étapes ci-dessous se font avec les boutons de <strong>ton navigateur</strong> (en haut ou en bas de l'écran), pas sur cette page.</p>
     <div class="guide-steps active">
       <div class="guide-step">
         <span class="guide-step-num">1</span>
@@ -527,7 +539,8 @@
       '<a class="btn-primary" href="' + APP_URL + '?install=1">' +
       '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>' +
       'Installer l\'application</a>' +
-      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>';
+      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>' +
+      '<a class="btn-secondary" href="' + APP_URL + '">Déjà installée ? Ouvrir l\'application</a>';
   }
 
   function renderIosCta() {
@@ -538,7 +551,8 @@
       '<button type="button" class="btn-primary" id="btn-ios-cta">' +
       '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>' +
       'Voir comment installer</button>' +
-      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>';
+      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>' +
+      '<a class="btn-secondary" href="' + APP_URL + '">Déjà installée ? Ouvrir l\'application</a>';
 
     document.getElementById('btn-ios-cta').addEventListener('click', function () {
       document.getElementById('ios-modal').hidden = false;
