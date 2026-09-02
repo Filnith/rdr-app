@@ -441,16 +441,12 @@
     <div class="guide-steps active" id="guide-ios">
       <div class="guide-step">
         <span class="guide-step-num">1</span>
-        <p>Ouvre ce lien dans <strong>Safari</strong> (indispensable — les autres navigateurs ne peuvent pas installer l'appli sur iOS).</p>
+        <p>Appuie sur l'icône <strong>Partager</strong>
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
+          de ton navigateur (Safari, Chrome...).</p>
       </div>
       <div class="guide-step">
         <span class="guide-step-num">2</span>
-        <p>Appuie sur l'icône <strong>Partager</strong>
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
-          en bas de l'écran.</p>
-      </div>
-      <div class="guide-step">
-        <span class="guide-step-num">3</span>
         <p>Fais défiler et appuie sur <strong>« Sur l'écran d'accueil »</strong>, puis <strong>« Ajouter »</strong>.</p>
       </div>
     </div>
@@ -499,16 +495,12 @@
     <div class="guide-steps active">
       <div class="guide-step">
         <span class="guide-step-num">1</span>
-        <p>Ouvre ce lien dans <strong>Safari</strong> si ce n'est pas déjà le cas.</p>
+        <p>Appuie sur l'icône <strong>Partager</strong>
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
+          de ton navigateur (Safari, Chrome...).</p>
       </div>
       <div class="guide-step">
         <span class="guide-step-num">2</span>
-        <p>Appuie sur l'icône <strong>Partager</strong>
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
-          en bas de l'écran.</p>
-      </div>
-      <div class="guide-step">
-        <span class="guide-step-num">3</span>
         <p>Fais défiler et appuie sur <strong>« Sur l'écran d'accueil »</strong>, puis <strong>« Ajouter »</strong>.</p>
       </div>
     </div>
@@ -526,7 +518,6 @@
   // (qui s'annonce comme un Mac) : mais uniquement si l'UA ne revendique
   // pas déjà explicitement Android, pour éviter tout faux positif.
   var isIOS = /iPad|iPhone|iPod/.test(ua) || (!isAndroidUA && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  var isSafari = isIOS && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
   var isAndroid = isAndroidUA;
 
   var ctaContainer = document.getElementById('install-cta');
@@ -540,22 +531,17 @@
   }
 
   function renderIosCta() {
-    var label = isSafari ? 'Voir comment installer' : 'Ouvrir dans Safari pour installer';
+    // Depuis iOS 17.4, l'ajout à l'écran d'accueil fonctionne depuis
+    // n'importe quel navigateur iOS (Safari, Chrome, Firefox...), tous
+    // basés sur WebKit — inutile de distinguer ou de rediriger vers Safari.
     ctaContainer.innerHTML =
       '<button type="button" class="btn-primary" id="btn-ios-cta">' +
       '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>' +
-      label + '</button>' +
+      'Voir comment installer</button>' +
       '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>';
 
     document.getElementById('btn-ios-cta').addEventListener('click', function () {
-      if (isSafari) {
-        document.getElementById('ios-modal').hidden = false;
-      } else {
-        // x-safari-https:// force l'ouverture du lien dans Safari, seul
-        // navigateur iOS autorisé par Apple à installer une PWA.
-        var absoluteAppUrl = new URL(APP_URL, location.href).href;
-        window.location = 'x-safari-' + absoluteAppUrl;
-      }
+      document.getElementById('ios-modal').hidden = false;
     });
   }
 
