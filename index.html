@@ -54,11 +54,21 @@
   </div>
 </header>
 
+<div id="install-banner" class="install-banner" hidden>
+  <span>📲 Installe l'appli pour un accès plus rapide</span>
+  <button type="button" id="btn-install-banner">Installer</button>
+  <button type="button" id="btn-install-dismiss" aria-label="Fermer">✕</button>
+</div>
+
 <main>
 
   <section id="tab-accueil" class="tab-panel active">
     <div class="hero hero-accueil">
       <p class="hero-subtitle">Reste maître de ta soirée, en toute sécurité.</p>
+      <p class="privacy-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+        <span><strong>100% confidentiel</strong> — toutes les données sont privées et restent sur ton téléphone.</span>
+      </p>
     </div>
     <div id="accueil-hero-zone" class="accueil-hero-zone">
       <button id="btn-new-entry" class="btn-cta-image" aria-label="Enregistrer une conso">
@@ -89,6 +99,21 @@
       <p class="hero-subtitle hero-subtitle-infos">À titre indicatif — ne remplace pas un avis médical.</p>
     </div>
     <img class="infos-banner" src="assets/illustrations/prevention.jpg" alt="Prévention et réduction des risques" loading="lazy">
+
+    <div class="disclaimer-box">
+      <h2 class="section-title">Avertissement</h2>
+      <p class="small">
+        Drug Check et ses développeurs déclinent toute responsabilité en cas
+        d'accident, de dommage ou de problème lié à la consommation de
+        substances. Les informations fournies ici sont purement indicatives
+        et préventives : elles ne remplacent en aucun cas un avis médical
+        professionnel et ne peuvent se substituer au jugement propre de
+        chaque utilisateur, seul responsable de ses choix et de leurs
+        conséquences. Ce contenu est une aide à la décision, pas une vérité
+        à suivre à la lettre.
+      </p>
+    </div>
+
     <div id="infos-list"></div>
 
     <div class="suggestion-box">

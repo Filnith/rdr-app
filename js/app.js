@@ -699,6 +699,46 @@ function triggerSaveAnimation() {
   }, 1400);
 }
 
+// ---------- Installation (PWA) ----------
+
+// Capture l'invite d'installation native de Chrome/Android (beforeinstallprompt
+// n'existe pas sur iOS : Apple ne permet à aucun navigateur de déclencher
+// l'ajout à l'écran d'accueil depuis une page web, quoi qu'on fasse ici).
+let deferredInstallPrompt = null;
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function showInstallBanner() {
+  if (isStandalone()) return;
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('rdr_install_dismissed') === '1'; } catch (e) {}
+  if (dismissed) return;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.hidden = false;
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Arrivée depuis le site vitrine (bouton "Installer") : ?install=1 déclenche
+  // directement la boîte de dialogue native plutôt que d'afficher le bandeau.
+  const params = new URLSearchParams(location.search);
+  if (params.get('install') === '1') {
+    e.prompt();
+    e.userChoice.finally(() => { deferredInstallPrompt = null; });
+  } else {
+    showInstallBanner();
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.hidden = true;
+});
+
 // ---------- Timer auto-refresh ----------
 
 setInterval(() => {
@@ -787,6 +827,18 @@ document.addEventListener('DOMContentLoaded', () => {
       addContact(name, phone);
       evt.target.reset();
     }
+  });
+
+  document.getElementById('btn-install-banner')?.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    document.getElementById('install-banner').hidden = true;
+  });
+  document.getElementById('btn-install-dismiss')?.addEventListener('click', () => {
+    document.getElementById('install-banner').hidden = true;
+    try { localStorage.setItem('rdr_install_dismissed', '1'); } catch (e) {}
   });
 
   if ('serviceWorker' in navigator) {

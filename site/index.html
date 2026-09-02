@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drug Check — Réduction des risques</title>
+<meta name="description" content="Drug Check : suivi du temps entre les prises, alertes d'interactions, infos par substance. 100% confidentiel, aucune donnée envoyée nulle part.">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" href="../icons/icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-elevated: #1a2540;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2b3a55;
+    --font-display: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-cta: 'Baloo 2', var(--font-display);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    font-family: var(--font-display);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+
+  .top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  .top-nav .pill-mini { width: 28px; height: 28px; }
+  .top-nav .wordmark {
+    font-family: var(--font-cta);
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+  .wordmark-drug { color: #fff; }
+  .wordmark-check {
+    background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  main { max-width: 560px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    text-align: center;
+    padding: 1.5rem 0 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-spark {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.55;
+    filter: blur(0.5px);
+    animation: sparkFloat 6s ease-in-out infinite;
+  }
+  .spark-1 { width: 10px; height: 10px; background: #38bdf8; top: 10%; left: 12%; animation-delay: 0s; }
+  .spark-2 { width: 7px; height: 7px; background: #f472b6; top: 20%; right: 14%; animation-delay: 1.2s; }
+  .spark-3 { width: 6px; height: 6px; background: #facc15; bottom: 22%; left: 20%; animation-delay: 2.4s; }
+  @keyframes sparkFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+  .hero-logo {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 1rem;
+    filter: drop-shadow(0 0 26px rgba(167, 139, 250, 0.55));
+    animation: heroFloat 3.5s ease-in-out infinite;
+  }
+  @keyframes heroFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(4deg); }
+  }
+  .hero h1 {
+    font-family: var(--font-cta);
+    font-weight: 700;
+    font-size: 2.6rem;
+    margin: 0 0 0.5rem;
+    letter-spacing: 0.01em;
+  }
+  .hero-tagline {
+    font-family: var(--font-cta);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #c4b5fd;
+    margin: 0 0 0.6rem;
+  }
+  .hero-desc {
+    font-size: 0.92rem;
+    color: var(--muted);
+    max-width: 380px;
+    margin: 0 auto 1.8rem;
+    line-height: 1.5;
+  }
+
+  /* ---------- Boutons ---------- */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: none;
+    border-radius: 999px;
+    padding: 0.95rem 1.8rem;
+    font-family: var(--font-cta);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    background: linear-gradient(120deg, #38bdf8, #818cf8, #f472b6, #38bdf8);
+    background-size: 300% 300%;
+    animation: ctaGradient 6s ease infinite;
+    box-shadow: 0 10px 28px -8px rgba(129, 140, 248, 0.55);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+  @keyframes ctaGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .btn-secondary {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-display);
+  }
+  .install-note {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1rem;
+  }
+
+  /* ---------- Features ---------- */
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin: 0 0 2.5rem;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 0.9rem;
+  }
+  .feature-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  .feature-icon svg { width: 18px; height: 18px; }
+  .feature-card h3 {
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #fff;
+  }
+  .feature-card p {
+    font-size: 0.76rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* ---------- Guide d'installation ---------- */
+  .section-heading {
+    font-family: var(--font-cta);
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-align: center;
+    margin: 0 0 1.2rem;
+    color: #fff;
+  }
+  .install-guide { margin-bottom: 2.5rem; }
+  .guide-tabs {
+    display: flex;
+    gap: 0.4rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.25rem;
+    margin-bottom: 1.1rem;
+  }
+  .guide-tab {
+    flex: 1;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.5rem 0;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .guide-tab.active {
+    background: linear-gradient(120deg, #38bdf8, #818cf8);
+    color: #fff;
+  }
+  .guide-steps { display: none; flex-direction: column; gap: 0.7rem; }
+  .guide-steps.active { display: flex; }
+  .guide-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 0.9rem;
+  }
+  .guide-step-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(120deg, #38bdf8, #a78bfa);
+    color: #fff;
+    font-family: var(--font-cta);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .guide-step p { margin: 0; font-size: 0.85rem; line-height: 1.4; }
+  .guide-step .icon-inline {
+    display: inline-flex;
+    vertical-align: middle;
+    width: 15px;
+    height: 15px;
+    margin: 0 0.15rem;
+  }
+
+  /* ---------- QR / desktop ---------- */
+  .desktop-fallback {
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.3rem;
+    margin-bottom: 2.5rem;
+  }
+  .desktop-fallback img {
+    width: 140px;
+    height: 140px;
+    margin: 0.8rem auto 0;
+    border-radius: 10px;
+    background: #fff;
+    padding: 6px;
+  }
+  .desktop-fallback p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.6rem 1.25rem 2.5rem;
+    text-align: center;
+  }
+  .footer-disclaimer {
+    max-width: 480px;
+    margin: 0 auto 1rem;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
+  .footer-links a { text-decoration: none; color: #7dd3fc; }
+
+  /* ---------- Modal instructions iOS ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 20;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-panel {
+    background: var(--bg-elevated);
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    max-height: 85svh;
+    overflow-y: auto;
+    border-radius: 18px 18px 0 0;
+    padding: 1.4rem 1.25rem calc(1.4rem + env(safe-area-inset-bottom));
+  }
+  .modal-panel h2 {
+    font-family: var(--font-cta);
+    font-size: 1.15rem;
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+  .modal-close {
+    display: block;
+    margin: 1.1rem auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 0.65rem 1.2rem;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  @media (prefers-color-scheme: light) {
+    /* L'appli est pensée dark-only : on garde le même thème sombre partout
+       pour que le site vitrine et l'appli restent visuellement identiques,
+       quel que soit le thème système du visiteur. */
+  }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <svg class="pill-mini" viewBox="0 0 120 120" fill="none">
+    <defs>
+      <linearGradient id="navPillGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="50%" stop-color="#a78bfa"/>
+        <stop offset="100%" stop-color="#f472b6"/>
+      </linearGradient>
+    </defs>
+    <g transform="rotate(-35 60 60)">
+      <rect x="18" y="40" width="84" height="40" rx="20" fill="url(#navPillGrad)"/>
+    </g>
+  </svg>
+  <span class="wordmark"><span class="wordmark-drug">Drug</span> <span class="wordmark-check">Check</span></span>
+</nav>
+
+<main>
+
+  <section class="hero">
+    <span class="hero-spark spark-1"></span>
+    <span class="hero-spark spark-2"></span>
+    <span class="hero-spark spark-3"></span>
+
+    <svg class="hero-logo" viewBox="0 0 120 120" fill="none">
+      <defs>
+        <linearGradient id="heroPillGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#38bdf8"/>
+          <stop offset="50%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#f472b6"/>
+        </linearGradient>
+      </defs>
+      <g transform="rotate(-35 60 60)">
+        <rect x="18" y="40" width="84" height="40" rx="20" fill="url(#heroPillGrad)"/>
+        <line x1="60" y1="40" x2="60" y2="80" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+        <ellipse cx="35" cy="53" rx="11" ry="5.5" fill="rgba(255,255,255,0.5)"/>
+      </g>
+    </svg>
+
+    <h1><span class="wordmark-drug">Drug</span> <span class="wordmark-check">Check</span></h1>
+    <p class="hero-tagline">Reste maître de ta soirée, en toute sécurité.</p>
+    <p class="hero-desc">
+      Suis le temps entre tes prises, reçois des alertes sur les interactions
+      à risque et consulte des infos par substance — 100% confidentiel,
+      aucune donnée n'est envoyée nulle part.
+    </p>
+
+    <div id="install-cta"></div>
+  </section>
+
+  <section class="features">
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#4ade8022;color:#4ade80">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+      </div>
+      <h3>100% confidentiel</h3>
+      <p>Toutes les données restent sur ton téléphone. Rien n'est envoyé à un serveur.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#38bdf822;color:#38bdf8">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+      </div>
+      <h3>Minuteurs entre prises</h3>
+      <p>Sais toujours depuis combien de temps, et ce que tu as déjà cumulé.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#f9731622;color:#f97316">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.8" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <h3>Alertes d'interaction</h3>
+      <p>Prévenu si une combinaison de substances présente un risque connu.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon" style="background:#a78bfa22;color:#a78bfa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5" stroke-width="2.2"/><circle cx="12" cy="8" r="0.9" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <h3>Infos par substance</h3>
+      <p>Effets, durée, signes d'alerte et conduite à tenir, en un coup d'œil.</p>
+    </div>
+  </section>
+
+  <section class="install-guide">
+    <h2 class="section-heading">Comment l'installer</h2>
+    <div class="guide-tabs">
+      <button type="button" class="guide-tab active" data-target="guide-ios">Sur iPhone</button>
+      <button type="button" class="guide-tab" data-target="guide-android">Sur Android</button>
+    </div>
+
+    <div class="guide-steps active" id="guide-ios">
+      <div class="guide-step">
+        <span class="guide-step-num">1</span>
+        <p>Ouvre ce lien dans <strong>Safari</strong> (indispensable — les autres navigateurs ne peuvent pas installer l'appli sur iOS).</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">2</span>
+        <p>Appuie sur l'icône <strong>Partager</strong>
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
+          en bas de l'écran.</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">3</span>
+        <p>Fais défiler et appuie sur <strong>« Sur l'écran d'accueil »</strong>, puis <strong>« Ajouter »</strong>.</p>
+      </div>
+    </div>
+
+    <div class="guide-steps" id="guide-android">
+      <div class="guide-step">
+        <span class="guide-step-num">1</span>
+        <p>Ouvre ce lien dans <strong>Chrome</strong>.</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">2</span>
+        <p>Appuie sur le bouton <strong>« Installer »</strong> ci-dessus — Chrome propose parfois aussi une bannière automatique.</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">3</span>
+        <p>Confirme, et l'icône apparaît sur ton écran d'accueil.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="desktop-fallback" id="desktop-fallback" hidden>
+    <p><strong>Tu es sur ordinateur.</strong> Scanne ce QR code avec ton téléphone pour installer l'appli.</p>
+    <img src="qr-app.png" alt="QR code vers Drug Check" width="140" height="140" loading="lazy">
+  </section>
+
+</main>
+
+<footer>
+  <p class="footer-disclaimer">
+    Drug Check et ses développeurs déclinent toute responsabilité en cas
+    d'accident, de dommage ou de problème lié à la consommation de
+    substances. Les informations fournies sont purement indicatives et
+    préventives : elles ne remplacent en aucun cas un avis médical
+    professionnel et ne peuvent se substituer au jugement propre de chaque
+    utilisateur, seul responsable de ses choix et de leurs conséquences.
+  </p>
+  <div class="footer-links">
+    <a href="../">Ouvrir l'application</a>
+    <a href="mailto:drugcheck.app@gmail.com">Nous contacter</a>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="ios-modal" hidden>
+  <div class="modal-panel">
+    <h2>Installer sur iPhone</h2>
+    <div class="guide-steps active">
+      <div class="guide-step">
+        <span class="guide-step-num">1</span>
+        <p>Ouvre ce lien dans <strong>Safari</strong> si ce n'est pas déjà le cas.</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">2</span>
+        <p>Appuie sur l'icône <strong>Partager</strong>
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>
+          en bas de l'écran.</p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-num">3</span>
+        <p>Fais défiler et appuie sur <strong>« Sur l'écran d'accueil »</strong>, puis <strong>« Ajouter »</strong>.</p>
+      </div>
+    </div>
+    <button type="button" class="modal-close" id="ios-modal-close">Compris</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var APP_URL = '../';
+
+  var ua = navigator.userAgent;
+  var isAndroidUA = /Android/.test(ua);
+  // navigator.platform === 'MacIntel' + points tactiles repère un iPad
+  // (qui s'annonce comme un Mac) : mais uniquement si l'UA ne revendique
+  // pas déjà explicitement Android, pour éviter tout faux positif.
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (!isAndroidUA && navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isSafari = isIOS && /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+  var isAndroid = isAndroidUA;
+
+  var ctaContainer = document.getElementById('install-cta');
+
+  function renderAndroidCta() {
+    ctaContainer.innerHTML =
+      '<a class="btn-primary" href="' + APP_URL + '?install=1">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><path d="M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>' +
+      'Installer l\'application</a>' +
+      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>';
+  }
+
+  function renderIosCta() {
+    var label = isSafari ? 'Voir comment installer' : 'Ouvrir dans Safari pour installer';
+    ctaContainer.innerHTML =
+      '<button type="button" class="btn-primary" id="btn-ios-cta">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><rect x="4" y="11" width="16" height="10" rx="2"/></svg>' +
+      label + '</button>' +
+      '<p class="install-note">Gratuite · fonctionne hors-ligne · ne collecte aucune donnée</p>';
+
+    document.getElementById('btn-ios-cta').addEventListener('click', function () {
+      if (isSafari) {
+        document.getElementById('ios-modal').hidden = false;
+      } else {
+        // x-safari-https:// force l'ouverture du lien dans Safari, seul
+        // navigateur iOS autorisé par Apple à installer une PWA.
+        var absoluteAppUrl = new URL(APP_URL, location.href).href;
+        window.location = 'x-safari-' + absoluteAppUrl;
+      }
+    });
+  }
+
+  function renderDesktopFallback() {
+    document.getElementById('desktop-fallback').hidden = false;
+    ctaContainer.innerHTML =
+      '<a class="btn-primary" href="' + APP_URL + '" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>' +
+      'Ouvrir l\'application</a>' +
+      '<p class="install-note">Ou scanne le QR code ci-dessous depuis ton téléphone</p>';
+  }
+
+  if (isIOS) {
+    renderIosCta();
+  } else if (isAndroid) {
+    renderAndroidCta();
+  } else {
+    renderDesktopFallback();
+  }
+
+  document.getElementById('ios-modal-close').addEventListener('click', function () {
+    document.getElementById('ios-modal').hidden = true;
+  });
+
+  document.querySelectorAll('.guide-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.guide-tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.guide-steps').forEach(function (s) { s.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
