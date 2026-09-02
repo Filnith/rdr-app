@@ -710,13 +710,38 @@ function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
+function dismissedInstallBanner() {
+  try { return localStorage.getItem('rdr_install_dismissed') === '1'; } catch (e) { return false; }
+}
+
 function showInstallBanner() {
-  if (isStandalone()) return;
-  let dismissed = false;
-  try { dismissed = localStorage.getItem('rdr_install_dismissed') === '1'; } catch (e) {}
-  if (dismissed) return;
+  if (isStandalone() || dismissedInstallBanner()) return;
   const banner = document.getElementById('install-banner');
   if (banner) banner.hidden = false;
+}
+
+// Certains navigateurs Android ne déclenchent jamais beforeinstallprompt
+// mais ont malgré tout leur propre installation manuelle, via leur menu :
+// Firefox Android (n'a jamais implémenté l'événement), et Samsung Internet
+// à partir de la version 27 (support retiré volontairement). Sans ça, un
+// clic sur "Installer" depuis le site vitrine (?install=1) ne déclenchait
+// rien du tout pour ces navigateurs, sans aucun message de repli.
+function androidManualInstallOnly() {
+  const ua = navigator.userAgent;
+  if (!/Android/.test(ua)) return false;
+  if (/Firefox/.test(ua)) return true;
+  const samsung = ua.match(/SamsungBrowser\/(\d+)/);
+  if (samsung && parseInt(samsung[1], 10) >= 27) return true;
+  return false;
+}
+
+function showManualInstallBanner() {
+  if (isStandalone() || dismissedInstallBanner()) return;
+  const banner = document.getElementById('install-banner');
+  if (!banner) return;
+  banner.querySelector('span').textContent = 'Ouvre le menu de ton navigateur (⋮) puis « Installer l\'application » ou « Ajouter à l\'écran d\'accueil ».';
+  banner.querySelector('#btn-install-banner').hidden = true;
+  banner.hidden = false;
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -730,6 +755,22 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.userChoice.finally(() => { deferredInstallPrompt = null; });
   } else {
     showInstallBanner();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(location.search);
+  if (params.get('install') !== '1') return;
+  if (androidManualInstallOnly()) {
+    showManualInstallBanner();
+  } else {
+    // Filet de sécurité : si beforeinstallprompt n'arrive toujours pas au
+    // bout de quelques secondes (navigateur non reconnu, heuristique
+    // d'engagement de Chrome...), on bascule sur les instructions
+    // manuelles plutôt que de laisser la personne sans aucune action.
+    setTimeout(() => {
+      if (!deferredInstallPrompt && !isStandalone()) showManualInstallBanner();
+    }, 3000);
   }
 });
 
