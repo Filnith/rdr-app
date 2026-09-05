@@ -177,9 +177,7 @@ const QUANTITY_PRESETS = {
 const TIME_PRESETS = [
   { label: 'Maintenant', offsetMin: 0 },
   { label: 'Il y a 15 min', offsetMin: 15 },
-  { label: 'Il y a 30 min', offsetMin: 30 },
-  { label: 'Il y a 1h', offsetMin: 60 },
-  { label: 'Il y a 2h', offsetMin: 120 }
+  { label: 'Il y a 1h', offsetMin: 60 }
 ];
 
 function getSubstance(id) {
